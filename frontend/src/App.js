@@ -25,14 +25,34 @@ const AppContent = () => {
       document.documentElement.style.scrollBehavior = 'auto';
       return;
     }
-    const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+    const lenis = new Lenis({ duration: 1.2, smoothWheel: true, lerp: 0.08 });
     lenisRef.current = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
+
+    // Smooth scroll to section when clicking in-page anchor links (#about, #projects, etc.)
+    const NAV_OFFSET = -80; // account for fixed navbar
+    const handleAnchorClick = (e) => {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (href === '#') return;
+      const id = href.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        lenis.scrollTo(el, { offset: NAV_OFFSET, duration: 1.2 });
+        window.history.pushState(null, '', href);
+      }
+    };
+    document.addEventListener('click', handleAnchorClick, { passive: false });
+
     return () => {
+      document.removeEventListener('click', handleAnchorClick);
       lenis.destroy();
       lenisRef.current = null;
     };
