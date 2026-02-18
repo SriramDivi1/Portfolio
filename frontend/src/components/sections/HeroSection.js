@@ -5,6 +5,18 @@ import { useTheme } from '../../context/ThemeContext';
 
 const roles = ['Front-End Developer', 'Back-End Developer', 'Full Stack Developer', 'Fresh Graduate'];
 
+// Tech stack icons for orbit (Simple Icons CDN)
+const ORBIT_RADIUS = 150;
+const TECH_ICONS = [
+  { name: 'Java', src: 'https://cdn.simpleicons.org/java/ED8B00' },
+  { name: 'Python', src: 'https://cdn.simpleicons.org/python/3776AB' },
+  { name: 'React', src: 'https://cdn.simpleicons.org/react/61DAFB' },
+  { name: 'Next.js', srcLight: 'https://cdn.simpleicons.org/nextdotjs/000000', srcDark: 'https://cdn.simpleicons.org/nextdotjs/E5E5E5' },
+  { name: 'Node.js', src: 'https://cdn.simpleicons.org/nodedotjs/339933' },
+  { name: 'Git', src: 'https://cdn.simpleicons.org/git/F05032' },
+  { name: 'Docker', src: 'https://cdn.simpleicons.org/docker/2496ED' },
+];
+
 const HeroSection = () => {
   const { isDark } = useTheme();
   const [roleIndex, setRoleIndex] = useState(0);
@@ -171,48 +183,83 @@ const HeroSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right Content - Abstract Shape */}
+          {/* Right Content - Abstract Shape + Orbiting Tech Icons */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="hidden lg:flex justify-center items-center"
           >
-            <div className="relative w-80 h-80">
-              {/* Rotating rings */}
+            <div className="relative w-[420px] h-[420px]">
+              {/* Orbiting tech icons - revolve around center */}
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 border-2 border-primary/30 rounded-full"
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-4 border-2 border-secondary/30 rounded-full"
-              />
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-8 border-2 border-primary/50 rounded-full"
-              />
-              {/* Center glow */}
-              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary to-secondary animate-pulse opacity-60 blur-xl" />
-              <div className="absolute inset-20 rounded-full bg-gradient-to-br from-primary to-secondary" />
-              {/* Code symbols */}
-              <motion.span
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute top-0 left-1/2 -translate-x-1/2 font-mono text-2xl text-primary"
+                transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                className="absolute inset-0"
               >
-                {'</>'}
-              </motion.span>
-              <motion.span
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 font-mono text-2xl text-secondary"
-              >
-                {'{ }'}
-              </motion.span>
+                {TECH_ICONS.map((icon, i) => {
+                  const angle = (360 / TECH_ICONS.length) * i;
+                  return (
+                    <div
+                      key={icon.name}
+                      className="absolute left-1/2 top-1/2 w-10 h-10 -ml-5 -mt-5 flex items-center justify-center rounded-xl overflow-hidden transition-transform hover:scale-125"
+                      style={{
+                        transform: `rotate(${angle}deg) translateY(-${ORBIT_RADIUS}px) rotate(${-angle}deg)`,
+                        boxShadow: isDark ? '0 4px 14px rgba(0,0,0,0.3)' : '0 4px 14px rgba(0,0,0,0.08)',
+                        background: isDark ? 'rgba(18,18,18,0.9)' : 'rgba(255,255,255,0.95)',
+                        border: isDark ? '1px solid rgba(42,42,42,0.8)' : '1px solid rgba(228,228,231,0.8)',
+                      }}
+                    >
+                      <img
+                        src={icon.src ?? (isDark ? icon.srcDark : icon.srcLight)}
+                        alt={icon.name}
+                        className="w-6 h-6 object-contain"
+                        title={icon.name}
+                      />
+                    </div>
+                  );
+                })}
+              </motion.div>
+
+              {/* Center object - rings and glow */}
+              <div className="absolute inset-[70px]">
+                <div className="relative w-full h-full">
+                  {/* Rotating rings */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-0 border-2 border-primary/30 rounded-full"
+                  />
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-4 border-2 border-secondary/30 rounded-full"
+                  />
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-8 border-2 border-primary/50 rounded-full"
+                  />
+                  {/* Center glow */}
+                  <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary to-secondary animate-pulse opacity-60 blur-xl" />
+                  <div className={`absolute inset-20 rounded-full bg-gradient-to-br from-primary to-secondary ${isDark ? '' : 'ring-2 ring-white/20'}`} />
+                  {/* Code symbols */}
+                  <motion.span
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute top-0 left-1/2 -translate-x-1/2 font-mono text-2xl text-primary"
+                  >
+                    {'</>'}
+                  </motion.span>
+                  <motion.span
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 font-mono text-2xl text-secondary"
+                  >
+                    {'{ }'}
+                  </motion.span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
