@@ -5,7 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 const stats = [
   { label: 'Status', value: 'Fresher' },
-  { label: 'Projects Built', value: '10+' },
+  { label: 'Projects Built', value: '13+' },
   { label: 'Technologies', value: '15+' },
 ];
 
