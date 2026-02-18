@@ -304,26 +304,26 @@ const HeroSection = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator - anchored to bottom of hero */}
-        <motion.div
-          initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: motionDelay(1), duration: motionDuration }}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2"
-        >
-          <motion.a
-            href="#about"
-            data-testid="scroll-indicator"
-            aria-label="Scroll to about section"
-            animate={orbitPaused ? { y: 0 } : { y: [0, 10, 0] }}
-            transition={{ duration: orbitPaused ? 0 : 1.5, repeat: Infinity }}
-            className={cn(isDark ? 'text-dark-muted' : 'text-light-muted')}
-          >
-            <ChevronDown size={32} />
-          </motion.a>
-        </motion.div>
       </div>
+
+      {/* Scroll Indicator - anchored to bottom of hero section */}
+      <motion.div
+        initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: motionDelay(1), duration: motionDuration }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+      >
+        <motion.a
+          href="#about"
+          data-testid="scroll-indicator"
+          aria-label="Scroll to about section"
+          animate={orbitPaused ? { y: 0 } : { y: [0, 10, 0] }}
+          transition={{ duration: orbitPaused ? 0 : 1.5, repeat: Infinity }}
+          className={cn('block', isDark ? 'text-dark-muted hover:text-dark-text' : 'text-light-muted hover:text-light-text', 'transition-colors')}
+        >
+          <ChevronDown size={36} />
+        </motion.a>
+      </motion.div>
     </section>
   );
 };
