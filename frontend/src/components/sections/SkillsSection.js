@@ -1,7 +1,11 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
 import { useTheme } from '../../context/ThemeContext';
+import { SectionHeader } from '../ui/SectionHeader';
+import { Card } from '../ui/Card';
+import { Tag, TagPill } from '../ui/Tag';
+import { cn } from '../../lib/cn';
 
 const skillCategories = [
   {
@@ -44,51 +48,49 @@ const marqueeSkills = [
   'Swagger', 'Express', 'HTML', 'CSS', 'Postman', 'VS Code',
 ];
 
+const stackSnapshot = {
+  Frontend: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
+  Backend: ['Node.js', 'NestJS', 'FastAPI', 'Java', 'Python', 'REST APIs', 'JWT'],
+  'Data & DevOps': ['PostgreSQL', 'Prisma', 'MongoDB', 'Docker', 'Git'],
+};
+
+const toolsList = ['VS Code', 'Postman', 'Figma', 'Docker', 'Git', 'Vercel'];
+
 const SkillsSection = () => {
   const { isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <section
       id="skills"
       data-testid="skills-section"
-      className={`py-24 md:py-32 ${isDark ? 'bg-dark-surface' : 'bg-light-surface'}`}
+      className={cn('py-24 md:py-32', isDark ? 'bg-dark-surface' : 'bg-light-surface')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <span className={`font-mono text-sm ${isDark ? 'text-primary' : 'text-primary'}`}>
-            {'// 03. SKILLS'}
-          </span>
-          <h2 className={`font-display text-4xl md:text-6xl font-semibold mt-4 ${isDark ? 'text-dark-text' : 'text-light-text'
-            }`}>
-            Tech Stack
-          </h2>
-        </motion.div>
+        <SectionHeader label="// 03. SKILLS" title="Tech Stack" />
 
         {/* Marquee */}
         <motion.div
           data-testid="skills-marquee"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
           className="mb-16 overflow-hidden"
         >
           <Marquee
+            speed={shouldReduceMotion ? 0 : 40}
             gradient={true}
             gradientColor={isDark ? '#0A0A0A' : '#FAFAFA'}
-            speed={40}
             className="py-4"
           >
             {marqueeSkills.map((skill, index) => (
               <span
                 key={index}
-                className={`mx-6 font-mono text-2xl md:text-4xl font-semibold ${index % 2 === 0 ? 'text-primary' : isDark ? 'text-dark-muted' : 'text-light-muted'
-                  }`}
+                className={cn(
+                  'mx-6 font-mono text-2xl md:text-4xl font-semibold',
+                  index % 2 === 0 ? 'text-primary' : isDark ? 'text-dark-muted' : 'text-light-muted'
+                )}
               >
                 {skill}
               </span>
@@ -96,70 +98,90 @@ const SkillsSection = () => {
           </Marquee>
         </motion.div>
 
+        {/* Stack snapshot */}
+        <motion.div
+          initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
+          className="mb-12"
+        >
+          <h3 className={cn('font-display text-lg font-semibold mb-4', isDark ? 'text-dark-text' : 'text-light-text')}>
+            Core stack
+          </h3>
+          <Card className="p-6">
+            <div className="flex flex-wrap gap-6">
+              {Object.entries(stackSnapshot).map(([group, skills]) => (
+                <div key={group}>
+                  <p className={cn('font-mono text-xs uppercase tracking-wider mb-2', 'text-primary')}>{group}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((s) => (
+                      <TagPill key={s}>{s}</TagPill>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={cn('mt-4 pt-4 border-t', isDark ? 'border-dark-border/50' : 'border-light-border/50')}>
+              <p className={cn('font-mono text-xs uppercase tracking-wider mb-2', 'text-primary')}>Tools</p>
+              <div className="flex flex-wrap gap-2">
+                {toolsList.map((t) => (
+                  <Tag key={t} className="rounded-full">{t}</Tag>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
         {/* Skills Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {skillCategories.map((category, categoryIndex) => (
-            <motion.div
-              key={category.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: categoryIndex * 0.1 }}
-              data-testid={`skill-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`p-6 rounded-2xl ${isDark
-                  ? 'bg-dark-bg border border-dark-border'
-                  : 'bg-light-bg border border-light-border'
-                }`}
-            >
-              <h3 className={`font-display text-xl font-semibold mb-6 ${isDark ? 'text-dark-text' : 'text-light-text'
-                }`}>
+            <Card key={category.name} as={motion.div} initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: shouldReduceMotion ? 0 : categoryIndex * 0.1, duration: shouldReduceMotion ? 0 : 0.3 }} data-testid={`skill-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`} className="p-6">
+              <h3 className={cn('font-display text-xl font-semibold mb-6', isDark ? 'text-dark-text' : 'text-light-text')}>
                 {category.name}
               </h3>
               <div className="space-y-4">
                 {category.skills.map((skill, skillIndex) => (
                   <motion.div
                     key={skill.name}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: shouldReduceMotion ? 1 : 0, x: shouldReduceMotion ? 0 : -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: skillIndex * 0.05 }}
+                    transition={{ delay: shouldReduceMotion ? 0 : skillIndex * 0.05, duration: shouldReduceMotion ? 0 : 0.3 }}
                   >
                     <div className="flex justify-between mb-2">
-                      <span className={`font-mono text-sm ${isDark ? 'text-dark-text' : 'text-light-text'
-                        }`}>
+                      <span className={cn('font-mono text-sm', isDark ? 'text-dark-text' : 'text-light-text')}>
                         {skill.name}
                       </span>
-                      <span className={`font-mono text-sm ${isDark ? 'text-dark-muted' : 'text-light-muted'
-                        }`}>
+                      <span className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                         {skill.level}%
                       </span>
                     </div>
-                    <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-dark-border' : 'bg-light-border'
-                      }`}>
+                    <div className={cn('h-2 rounded-full overflow-hidden', isDark ? 'bg-dark-border' : 'bg-light-border')}>
                       <motion.div
-                        initial={{ width: 0 }}
+                        initial={{ width: shouldReduceMotion ? `${skill.level}%` : 0 }}
                         whileInView={{ width: `${skill.level}%` }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1, delay: skillIndex * 0.05 }}
+                        transition={{ duration: shouldReduceMotion ? 0 : 1, delay: shouldReduceMotion ? 0 : skillIndex * 0.05 }}
                         className="h-full rounded-full bg-gradient-to-r from-primary to-secondary"
                       />
                     </div>
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
+            </Card>
           ))}
         </div>
 
         {/* Certifications */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
           className="mt-16"
         >
-          <h3 className={`font-display text-2xl font-semibold mb-6 ${isDark ? 'text-dark-text' : 'text-light-text'
-            }`}>
+          <h3 className={cn('font-display text-2xl font-semibold mb-6', isDark ? 'text-dark-text' : 'text-light-text')}>
             Certifications
           </h3>
           <div className="flex flex-wrap gap-4">
@@ -175,13 +197,9 @@ const SkillsSection = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className={`px-4 py-2 rounded-full font-mono text-sm ${isDark
-                    ? 'bg-dark-bg border border-dark-border text-dark-muted hover:border-primary'
-                    : 'bg-light-bg border border-light-border text-light-muted hover:border-primary'
-                  } transition-colors`}
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
               >
-                {cert}
+                <TagPill className="cursor-default">{cert}</TagPill>
               </motion.span>
             ))}
           </div>

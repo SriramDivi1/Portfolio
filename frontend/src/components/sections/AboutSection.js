@@ -2,6 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Briefcase, GraduationCap, Code2 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { SectionHeader } from '../ui/SectionHeader';
+import { CardInner } from '../ui/Card';
+import { cn } from '../../lib/cn';
 
 const stats = [
   { label: 'Status', value: 'Fresher' },
@@ -16,25 +19,10 @@ const AboutSection = () => {
     <section
       id="about"
       data-testid="about-section"
-      className={`py-24 md:py-32 ${isDark ? 'bg-dark-surface' : 'bg-light-surface'}`}
+      className={cn('py-24 md:py-32', isDark ? 'bg-dark-surface' : 'bg-light-surface')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <span className={`font-mono text-sm ${isDark ? 'text-primary' : 'text-primary'}`}>
-            {'// 01. ABOUT ME'}
-          </span>
-          <h2 className={`font-display text-4xl md:text-6xl font-semibold mt-4 ${
-            isDark ? 'text-dark-text' : 'text-light-text'
-          }`}>
-            Who I Am
-          </h2>
-        </motion.div>
+        <SectionHeader label="// 01. ABOUT ME" title="Who I Am" />
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left - Image/Visual */}
@@ -44,24 +32,19 @@ const AboutSection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className={`relative rounded-2xl overflow-hidden ${
-              isDark ? 'bg-dark-bg' : 'bg-light-bg'
-            }`}>
-              {/* Terminal-like card */}
-              <div className={`p-6 border rounded-2xl ${
-                isDark ? 'border-dark-border bg-dark-bg' : 'border-light-border bg-white'
-              }`}>
+            <div className={cn('relative rounded-2xl overflow-hidden', isDark ? 'bg-dark-bg' : 'bg-light-bg')}>
+              <CardInner as="div" className="p-6 border">
                 {/* Terminal Header */}
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className={`ml-2 font-mono text-sm ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+                  <span className={cn('ml-2 font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                     sriram@portfolio:~
                   </span>
                 </div>
                 {/* Terminal Content */}
-                <div className={`font-mono text-sm space-y-3 ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+                <div className={cn('font-mono text-sm space-y-3', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                   <p><span className="text-primary">const</span> developer = {'{'}</p>
                   <p className="pl-4"><span className="text-secondary">name</span>: <span className="text-green-400">"Sriram Divi"</span>,</p>
                   <p className="pl-4"><span className="text-secondary">role</span>: <span className="text-green-400">"Computer Science Graduate · Fresher"</span>,</p>
@@ -74,7 +57,7 @@ const AboutSection = () => {
                   <p className="pl-4">]</p>
                   <p>{'}'}</p>
                 </div>
-              </div>
+              </CardInner>
             </div>
             {/* Decorative element */}
             <div className="absolute -bottom-4 -right-4 w-24 h-24 border-2 border-primary rounded-2xl -z-10" />
@@ -86,14 +69,10 @@ const AboutSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <p className={`text-lg leading-relaxed mb-6 ${
-              isDark ? 'text-dark-muted' : 'text-light-muted'
-            }`}>
+            <p className={cn('text-lg leading-relaxed mb-6', isDark ? 'text-dark-muted' : 'text-light-muted')}>
               Recent Computer Science graduate from SRM University AP, eager to start my career in software development. I build modern web applications with React and Node.js, and I'm passionate about full stack development, clean code, and learning industry best practices.
             </p>
-            <p className={`text-lg leading-relaxed mb-8 ${
-              isDark ? 'text-dark-muted' : 'text-light-muted'
-            }`}>
+            <p className={cn('text-lg leading-relaxed mb-8', isDark ? 'text-dark-muted' : 'text-light-muted')}>
               My focus includes React frontends, REST APIs, authentication, and responsive design. I'm looking for opportunities where I can contribute, grow, and deliver value from day one.
             </p>
 
@@ -108,13 +87,11 @@ const AboutSection = () => {
                 <motion.div
                   key={label}
                   whileHover={{ y: -2 }}
-                  className={`p-4 rounded-xl ${
-                    isDark ? 'bg-dark-bg border border-dark-border' : 'bg-light-bg border border-light-border'
-                  }`}
+                  className={cn('p-4 rounded-xl', isDark ? 'bg-dark-bg border border-dark-border' : 'bg-light-bg border border-light-border')}
                 >
                   <Icon size={20} className="text-primary mb-2" />
-                  <p className={`font-mono text-xs ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>{label}</p>
-                  <p className={`font-semibold ${isDark ? 'text-dark-text' : 'text-light-text'}`}>{value}</p>
+                  <p className={cn('font-mono text-xs', isDark ? 'text-dark-muted' : 'text-light-muted')}>{label}</p>
+                  <p className={cn('font-semibold', isDark ? 'text-dark-text' : 'text-light-text')}>{value}</p>
                 </motion.div>
               ))}
             </div>
@@ -130,7 +107,7 @@ const AboutSection = () => {
                   transition={{ delay: index * 0.1 }}
                 >
                   <p className="font-display text-4xl font-semibold text-primary">{value}</p>
-                  <p className={`font-mono text-sm ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>{label}</p>
+                  <p className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>{label}</p>
                 </motion.div>
               ))}
             </div>

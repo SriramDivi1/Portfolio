@@ -1,7 +1,11 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Calendar, MapPin, Building2 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { SectionHeader } from '../ui/SectionHeader';
+import { Card } from '../ui/Card';
+import { Tag } from '../ui/Tag';
+import { cn } from '../../lib/cn';
 
 const experiences = [
   {
@@ -83,71 +87,43 @@ const education = [
 
 const ExperienceSection = () => {
   const { isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <section
       id="experience"
       data-testid="experience-section"
-      className={`py-24 md:py-32 ${isDark ? 'bg-dark-bg' : 'bg-light-bg'}`}
+      className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <span className={`font-mono text-sm ${isDark ? 'text-primary' : 'text-primary'}`}>
-            {'// 04. EXPERIENCE'}
-          </span>
-          <h2 className={`font-display text-4xl md:text-6xl font-semibold mt-4 ${
-            isDark ? 'text-dark-text' : 'text-light-text'
-          }`}>
-            Where I've Worked
-          </h2>
-        </motion.div>
+        <SectionHeader label="// 04. EXPERIENCE" title="Where I've Worked" />
 
         {/* Timeline */}
         <div className="relative">
           {/* Vertical Line */}
-          <div className={`absolute left-0 md:left-1/2 top-0 bottom-0 w-px ${
-            isDark ? 'bg-dark-border' : 'bg-light-border'
-          } transform -translate-x-1/2 hidden md:block`} />
+          <div className={cn('absolute left-0 md:left-1/2 top-0 bottom-0 w-px transform -translate-x-1/2 hidden md:block', isDark ? 'bg-dark-border' : 'bg-light-border')} />
 
           {experiences.map((exp, index) => (
             <motion.div
               key={exp.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: shouldReduceMotion ? 0 : index * 0.1, duration: shouldReduceMotion ? 0 : 0.3 }}
               data-testid={`experience-card-${exp.id}`}
-              className={`relative mb-12 md:mb-16 ${
-                index % 2 === 0 ? 'md:pr-[50%] md:text-right' : 'md:pl-[50%] md:ml-auto'
-              }`}
+              className={cn('relative mb-12 md:mb-16', index % 2 === 0 ? 'md:pr-[50%] md:text-right' : 'md:pl-[50%] md:ml-auto')}
             >
               {/* Timeline Node */}
-              <div className={`absolute left-0 md:left-1/2 top-8 w-4 h-4 rounded-full bg-primary transform -translate-x-1/2 hidden md:block`}>
-                <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-50" />
+              <div className="absolute left-0 md:left-1/2 top-8 w-3 h-3 md:w-4 md:h-4 rounded-full bg-primary transform -translate-x-1/2 hidden md:block ring-4 ring-primary/20" aria-hidden="true">
+                <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-30" />
               </div>
 
               {/* Content Card */}
-              <div className={`p-6 rounded-2xl ${
-                index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'
-              } ${
-                isDark
-                  ? 'bg-dark-surface border border-dark-border'
-                  : 'bg-light-surface border border-light-border'
-              }`}>
+              <Card className={cn('p-6', index % 2 === 0 ? 'md:mr-8' : 'md:ml-8')}>
                 {/* Header */}
-                <div className={`flex flex-wrap items-start gap-4 mb-4 ${
-                  index % 2 === 0 ? 'md:justify-end' : ''
-                }`}>
+                <div className={cn('flex flex-wrap items-start gap-4 mb-4', index % 2 === 0 && 'md:justify-end')}>
                   <div className={index % 2 === 0 ? 'md:text-right' : ''}>
-                    <h3 className={`font-display text-xl font-semibold ${
-                      isDark ? 'text-dark-text' : 'text-light-text'
-                    }`}>
+                    <h3 className={cn('font-display text-xl font-semibold', isDark ? 'text-dark-text' : 'text-light-text')}>
                       {exp.role}
                     </h3>
                     <p className="text-primary font-semibold">{exp.company}</p>
@@ -155,9 +131,7 @@ const ExperienceSection = () => {
                 </div>
 
                 {/* Meta Info */}
-                <div className={`flex flex-wrap gap-4 mb-4 text-sm ${
-                  isDark ? 'text-dark-muted' : 'text-light-muted'
-                } ${index % 2 === 0 ? 'md:justify-end' : ''}`}>
+                <div className={cn('flex flex-wrap gap-4 mb-4 text-sm', isDark ? 'text-dark-muted' : 'text-light-muted', index % 2 === 0 && 'md:justify-end')}>
                   <span className="flex items-center gap-1">
                     <Calendar size={14} />
                     {exp.period}
@@ -173,44 +147,33 @@ const ExperienceSection = () => {
                 </div>
 
                 {/* Description */}
-                <p className={`mb-4 text-sm ${
-                  isDark ? 'text-dark-muted' : 'text-light-muted'
-                }`}>
+                <p className={cn('mb-4 text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                   {exp.description}
                 </p>
 
-                {/* Achievements */}
-                <ul className={`mb-4 space-y-2 ${
-                  isDark ? 'text-dark-muted' : 'text-light-muted'
-                }`}>
+                {/* Top achievements */}
+                <h4 className={cn('font-mono text-xs uppercase tracking-wider mb-2', 'text-primary')}>
+                  Top achievements
+                </h4>
+                <ul className={cn('mb-4 space-y-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                   {exp.achievements.map((achievement, i) => (
-                    <li key={i} className={`flex items-start gap-2 text-sm ${
-                      index % 2 === 0 ? 'md:flex-row-reverse md:text-right' : ''
-                    }`}>
+                    <li key={i} className={cn('flex items-start gap-2 text-sm', index % 2 === 0 && 'md:flex-row-reverse md:text-right')}>
                       <span className="w-1.5 h-1.5 mt-2 bg-primary rounded-full flex-shrink-0" />
                       {achievement}
                     </li>
                   ))}
                 </ul>
 
-                {/* Tech Stack */}
-                <div className={`flex flex-wrap gap-2 ${
-                  index % 2 === 0 ? 'md:justify-end' : ''
-                }`}>
+                {/* Tech used */}
+                <h4 className={cn('font-mono text-xs uppercase tracking-wider mb-2', 'text-primary', index % 2 === 0 && 'md:text-right')}>
+                  Tech used
+                </h4>
+                <div className={cn('flex flex-wrap gap-2', index % 2 === 0 && 'md:justify-end')}>
                   {exp.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className={`px-3 py-1 text-xs font-mono rounded-full ${
-                        isDark
-                          ? 'bg-dark-bg text-dark-muted'
-                          : 'bg-light-bg text-light-muted'
-                      }`}
-                    >
-                      {tech}
-                    </span>
+                    <Tag key={tech} className="rounded-full">{tech}</Tag>
                   ))}
                 </div>
-              </div>
+              </Card>
             </motion.div>
           ))}
         </div>
@@ -222,43 +185,34 @@ const ExperienceSection = () => {
           viewport={{ once: true }}
           className="mt-16"
         >
-          <h3 className={`font-display text-2xl font-semibold mb-8 ${
-            isDark ? 'text-dark-text' : 'text-light-text'
-          }`}>
+          <h3 className={cn('font-display text-2xl font-semibold mb-8', isDark ? 'text-dark-text' : 'text-light-text')}>
             Education
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             {education.map((edu, index) => (
-              <motion.div
+              <Card
                 key={edu.degree}
-                initial={{ opacity: 0, y: 20 }}
+                as={motion.div}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: shouldReduceMotion ? 0 : index * 0.1, duration: shouldReduceMotion ? 0 : 0.3 }}
                 data-testid={`education-card-${index}`}
-                className={`p-6 rounded-2xl ${
-                  isDark
-                    ? 'bg-dark-surface border border-dark-border'
-                    : 'bg-light-surface border border-light-border'
-                }`}
+                className="p-6"
               >
-                <h4 className={`font-semibold mb-2 ${
-                  isDark ? 'text-dark-text' : 'text-light-text'
-                }`}>
+                <h4 className={cn('font-semibold mb-2', isDark ? 'text-dark-text' : 'text-light-text')}>
                   {edu.degree}
                 </h4>
                 <p className="text-primary mb-1">{edu.institution}</p>
                 {edu.cgpa && (
-                  <p className={`font-mono text-sm mb-1 ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+                  <p className={cn('font-mono text-sm mb-1', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                     CGPA: {edu.cgpa}
                   </p>
                 )}
-                <p className={`font-mono text-sm ${
-                  isDark ? 'text-dark-muted' : 'text-light-muted'
-                }`}>
+                <p className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                   {edu.period}
                 </p>
-              </motion.div>
+              </Card>
             ))}
           </div>
         </motion.div>

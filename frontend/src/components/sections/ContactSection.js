@@ -1,46 +1,80 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Send, Mail, MapPin, Phone, Loader2, CheckCircle } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
+import { SectionHeader } from '../ui/SectionHeader';
+import { cn } from '../../lib/cn';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
+const MIN_SUBMIT_SECONDS = 3; // Spam: reject if form submitted too quickly
 
 const ContactSection = () => {
   const { isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
+  const formMountTime = useRef(Date.now());
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
     message: '',
+    website: '', // Honeypot: leave empty; bots often fill it
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setSubmitError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError(null);
+
+    if (formData.website) {
+      toast.success('Message received. I\'ll get back to you soon.');
+      setFormData({ name: '', email: '', subject: '', message: '', website: '' });
+      return;
+    }
+    const elapsed = (Date.now() - formMountTime.current) / 1000;
+    if (elapsed < MIN_SUBMIT_SECONDS) {
+      toast.error('Please take a moment to complete the form, then try again.');
+      return;
+    }
+
+    if (!BACKEND_URL.trim()) {
+      setSubmitError('Contact form is not configured. Please email me directly using the address below.');
+      toast.error('Form not configured. Use the email link below.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
-      const response = await fetch(`${backendUrl}/api/contact`, {
+      const payload = { name: formData.name, email: formData.email, subject: formData.subject, message: formData.message };
+      const response = await fetch(`${BACKEND_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         toast.success('Message sent successfully! I\'ll get back to you soon.');
         setIsSubmitted(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', subject: '', message: '', website: '' });
+        setSubmitError(null);
         setTimeout(() => setIsSubmitted(false), 6000);
       } else {
-        toast.error('Failed to send message. Please try again.');
+        const msg = 'Failed to send. Please try again or email me directly.';
+        setSubmitError(msg);
+        toast.error(msg);
       }
-    } catch (error) {
-      toast.error('Something went wrong. Please try again later.');
+    } catch (err) {
+      const msg = 'Connection error. Check your network and try again, or email me directly.';
+      setSubmitError(msg);
+      toast.error(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -50,7 +84,7 @@ const ContactSection = () => {
     <section
       id="contact"
       data-testid="contact-section"
-      className={`py-24 md:py-32 ${isDark ? 'bg-dark-surface' : 'bg-light-surface'}`}
+      className={cn('py-24 md:py-32', isDark ? 'bg-dark-surface' : 'bg-light-surface')}
     >
       <Toaster 
         position="top-center" 
@@ -66,27 +100,16 @@ const ContactSection = () => {
       />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        <SectionHeader label="// 05. CONTACT" title="Get In Touch" align="center" className="mb-16" />
+        <motion.p
+          initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center"
+          transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
+          className={cn('mt-4 max-w-xl mx-auto text-center', isDark ? 'text-dark-muted' : 'text-light-muted')}
         >
-          <span className={`font-mono text-sm ${isDark ? 'text-primary' : 'text-primary'}`}>
-            {'// 05. CONTACT'}
-          </span>
-          <h2 className={`font-display text-4xl md:text-6xl font-semibold mt-4 ${
-            isDark ? 'text-dark-text' : 'text-light-text'
-          }`}>
-            Get In Touch
-          </h2>
-          <p className={`mt-4 max-w-xl mx-auto ${
-            isDark ? 'text-dark-muted' : 'text-light-muted'
-          }`}>
-            I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
-          </p>
-        </motion.div>
+          I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+        </motion.p>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Info */}
@@ -104,31 +127,28 @@ const ContactSection = () => {
                 <motion.div
                   key={label}
                   whileHover={{ x: 5 }}
-                  className={`flex items-center gap-4 p-4 rounded-xl ${
-                    isDark
-                      ? 'bg-dark-bg border border-dark-border'
-                      : 'bg-light-bg border border-light-border'
-                  }`}
+                  className={cn(
+                    'flex items-center gap-4 p-4 rounded-xl',
+                    isDark ? 'bg-dark-bg border border-dark-border' : 'bg-light-bg border border-light-border'
+                  )}
                 >
-                  <div className={`p-3 rounded-xl ${isDark ? 'bg-dark-surface' : 'bg-light-surface'}`}>
+                  <div className={cn('p-3 rounded-xl', isDark ? 'bg-dark-surface' : 'bg-light-surface')}>
                     <Icon size={24} className="text-primary" />
                   </div>
                   <div>
-                    <p className={`font-mono text-sm ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+                    <p className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                       {label}
                     </p>
                     {href ? (
                       <a
                         href={href}
                         data-testid={`contact-${label.toLowerCase()}`}
-                        className={`font-semibold hover:text-primary transition-colors ${
-                          isDark ? 'text-dark-text' : 'text-light-text'
-                        }`}
+                        className={cn('font-semibold hover:text-primary transition-colors', isDark ? 'text-dark-text' : 'text-light-text')}
                       >
                         {value}
                       </a>
                     ) : (
-                      <p className={`font-semibold ${isDark ? 'text-dark-text' : 'text-light-text'}`}>
+                      <p className={cn('font-semibold', isDark ? 'text-dark-text' : 'text-light-text')}>
                         {value}
                       </p>
                     )}
@@ -142,13 +162,12 @@ const ContactSection = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className={`mt-8 p-8 rounded-2xl text-center ${
-                isDark
-                  ? 'bg-dark-bg border border-dark-border'
-                  : 'bg-light-bg border border-light-border'
-              }`}
+              className={cn(
+                'mt-8 p-8 rounded-2xl text-center',
+                isDark ? 'bg-dark-bg border border-dark-border' : 'bg-light-bg border border-light-border'
+              )}
             >
-              <p className={`font-mono text-sm mb-2 ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+              <p className={cn('font-mono text-sm mb-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                 Let's build something amazing together!
               </p>
               <p className="text-4xl">🚀</p>
@@ -169,98 +188,115 @@ const ContactSection = () => {
                 className="mb-6 p-4 rounded-xl bg-green-500/20 border border-green-500/50 flex items-center gap-3"
               >
                 <CheckCircle size={24} className="text-green-500 shrink-0" />
-                <p className="text-green-700 dark:text-green-300 font-medium">
+                <p className={cn('font-medium', isDark ? 'text-green-300' : 'text-green-700')}>
                   Message sent successfully! I'll get back to you soon.
                 </p>
               </motion.div>
             )}
-            <form onSubmit={handleSubmit} data-testid="contact-form" className="space-y-6">
+            {submitError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl bg-secondary/10 border border-secondary/30 flex items-center gap-3"
+              >
+                <p className={cn('text-sm font-medium', isDark ? 'text-secondary' : 'text-red-600')}>
+                  {submitError}
+                </p>
+              </motion.div>
+            )}
+            <form onSubmit={handleSubmit} data-testid="contact-form" className="space-y-6" noValidate>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className={`block font-mono text-sm mb-2 ${
-                    isDark ? 'text-dark-muted' : 'text-light-muted'
-                  }`}>
+                  <label htmlFor="contact-name" className={cn('block font-mono text-sm mb-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                     Name
                   </label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
                     data-testid="contact-name-input"
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className={`w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all ${
-                      isDark
-                        ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary'
-                        : 'bg-light-bg border-light-border text-light-text focus:border-primary'
-                    }`}
+                    className={cn(
+                      'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all',
+                      isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
+                    )}
                     placeholder="John Doe"
                   />
                 </div>
                 <div>
-                  <label className={`block font-mono text-sm mb-2 ${
-                    isDark ? 'text-dark-muted' : 'text-light-muted'
-                  }`}>
+                  <label htmlFor="contact-email" className={cn('block font-mono text-sm mb-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                     Email
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
                     data-testid="contact-email-input"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className={`w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all ${
-                      isDark
-                        ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary'
-                        : 'bg-light-bg border-light-border text-light-text focus:border-primary'
-                    }`}
+                    className={cn(
+                      'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all',
+                      isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
+                    )}
                     placeholder="john@example.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label className={`block font-mono text-sm mb-2 ${
-                  isDark ? 'text-dark-muted' : 'text-light-muted'
-                }`}>
+                <label htmlFor="contact-subject" className={cn('block font-mono text-sm mb-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                   Subject
                 </label>
                 <input
+                  id="contact-subject"
                   type="text"
                   name="subject"
                   data-testid="contact-subject-input"
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className={`w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all ${
-                    isDark
-                      ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary'
-                      : 'bg-light-bg border-light-border text-light-text focus:border-primary'
-                  }`}
+                  className={cn(
+                    'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all',
+                    isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
+                  )}
                   placeholder="Project Inquiry"
                 />
               </div>
 
               <div>
-                <label className={`block font-mono text-sm mb-2 ${
-                  isDark ? 'text-dark-muted' : 'text-light-muted'
-                }`}>
+                <label htmlFor="contact-message" className={cn('block font-mono text-sm mb-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                   Message
                 </label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   data-testid="contact-message-input"
                   value={formData.message}
                   onChange={handleChange}
                   required
                   rows={5}
-                  className={`w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all resize-none ${
-                    isDark
-                      ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary'
-                      : 'bg-light-bg border-light-border text-light-text focus:border-primary'
-                  }`}
+                  className={cn(
+                    'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all resize-none',
+                    isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
+                  )}
                   placeholder="Tell me about your project..."
+                />
+              </div>
+
+              {/* Honeypot: hidden from users; leave empty */}
+              <div className="absolute -left-[9999px] top-0 overflow-hidden" aria-hidden="true">
+                <label htmlFor="contact-website">Website</label>
+                <input
+                  id="contact-website"
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -268,13 +304,13 @@ const ContactSection = () => {
                 type="submit"
                 data-testid="contact-submit-btn"
                 disabled={isSubmitting || isSubmitted}
+                aria-busy={isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full py-4 rounded-full font-semibold flex items-center justify-center gap-2 transition-all ${
-                  isSubmitted
-                    ? 'bg-green-500 text-white'
-                    : 'bg-primary text-white hover:glow-primary'
-                }`}
+                className={cn(
+                  'w-full py-4 rounded-full font-semibold flex items-center justify-center gap-2 transition-all',
+                  isSubmitted ? 'bg-green-500 text-white' : 'bg-primary text-white hover:glow-primary'
+                )}
               >
                 {isSubmitting ? (
                   <>
