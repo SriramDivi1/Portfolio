@@ -37,6 +37,13 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .theme-transition,
+  .theme-transition main,
+  .theme-transition main section,
+  .theme-transition footer,
+  .theme-transition nav {
+    transition-duration: 0.05s !important;
+  }
 }
 
 body {

@@ -46,7 +46,7 @@ const AppContent = () => {
 
   return (
     <div
-      className={cn('min-h-screen transition-colors duration-300', isDark ? 'bg-dark-bg text-dark-text' : 'bg-light-bg text-light-text')}
+      className={cn('min-h-screen theme-transition', isDark ? 'bg-dark-bg text-dark-text' : 'bg-light-bg text-light-text')}
     >
       {/* Skip link - visible on focus for keyboard/screen reader */}
       <a

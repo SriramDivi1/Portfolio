@@ -5,7 +5,14 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* No section background transition - avoids color shift when scrolling from hero */
+/* Smooth theme switch (light ↔ dark) */
+.theme-transition,
+.theme-transition main,
+.theme-transition main section,
+.theme-transition footer,
+.theme-transition nav {
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out, border-color 0.5s ease-in-out;
+}
 
 /* Custom cursor for interactive elements */
 a, button {
