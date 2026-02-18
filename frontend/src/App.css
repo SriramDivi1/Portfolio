@@ -5,10 +5,7 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* Section transitions */
-section {
-  transition: background-color 0.3s ease;
-}
+/* No section background transition - avoids color shift when scrolling from hero */
 
 /* Custom cursor for interactive elements */
 a, button {

@@ -22,7 +22,7 @@ const AboutSection = () => {
     <section
       id="about"
       data-testid="about-section"
-      className={cn('py-24 md:py-32', isDark ? 'bg-dark-surface' : 'bg-light-surface')}
+      className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
         <SectionHeader label="// 01. ABOUT ME" title="Who I Am" />
@@ -36,7 +36,7 @@ const AboutSection = () => {
             transition={motionTransition}
             className="relative"
           >
-            <div className={cn('relative rounded-2xl overflow-hidden', isDark ? 'bg-dark-bg' : 'bg-light-bg')}>
+            <div className={cn('relative rounded-2xl overflow-hidden', isDark ? 'bg-dark-surface' : 'bg-light-bg')}>
               <CardInner as="div" className="p-6 border">
                 {/* Terminal Header */}
                 <div className="flex items-center gap-2 mb-4">

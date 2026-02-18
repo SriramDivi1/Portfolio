@@ -22,19 +22,19 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div
-          className="min-h-screen flex flex-col items-center justify-center p-8 bg-[#050505] text-white"
+          className="min-h-screen flex flex-col items-center justify-center p-8 bg-dark-bg text-dark-text"
           role="alert"
         >
           <h1 className="font-display text-2xl md:text-3xl font-semibold mb-2">
             Something went wrong
           </h1>
-          <p className="text-gray-400 text-center max-w-md mb-8">
+          <p className="text-dark-muted text-center max-w-md mb-8">
             The app hit an error. You can try reloading the page.
           </p>
           <button
             type="button"
             onClick={this.handleReload}
-            className="px-6 py-3 rounded-full font-semibold bg-[#007AFF] text-white hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
+            className="px-6 py-3 rounded-full font-semibold bg-primary text-white hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg"
           >
             Reload page
           </button>

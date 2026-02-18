@@ -84,11 +84,11 @@ const ContactSection = () => {
     <section
       id="contact"
       data-testid="contact-section"
-      className={cn('py-24 md:py-32', isDark ? 'bg-dark-surface' : 'bg-light-surface')}
+      className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
     >
-      <Toaster 
-        position="top-center" 
-        theme={isDark ? 'dark' : 'light'} 
+      <Toaster
+        position="top-center"
+        theme={isDark ? 'dark' : 'light'}
         richColors
         toastOptions={{
           duration: 6000,
@@ -98,15 +98,15 @@ const ContactSection = () => {
           }
         }}
       />
-      
+
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <SectionHeader label="// 05. CONTACT" title="Get In Touch" align="center" className="mb-16" />
+        <SectionHeader label="// 05. CONTACT" title="Get in Touch" align="center" className="mb-6" />
         <motion.p
           initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
-          className={cn('mt-4 max-w-xl mx-auto text-center', isDark ? 'text-dark-muted' : 'text-light-muted')}
+          className={cn('mt-2 mb-16 max-w-xl mx-auto text-center', isDark ? 'text-dark-muted' : 'text-light-muted')}
         >
           I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
         </motion.p>
@@ -121,8 +121,8 @@ const ContactSection = () => {
             <div className="space-y-6">
               {[
                 { icon: Mail, label: 'Email', value: 'sriramdivi716@gmail.com', href: 'mailto:sriramdivi716@gmail.com' },
-                { icon: Phone, label: 'Phone', value: '+91 9398542488', href: 'tel:+919398542488' },
-                { icon: MapPin, label: 'Location', value: 'Bangalore, Karnataka, India', href: null },
+                { icon: Phone, label: 'Phone', value: '+91 93985 42488', href: 'tel:+919398542488' },
+                { icon: MapPin, label: 'Location', value: 'Bangalore, India', href: null },
               ].map(({ icon: Icon, label, value, href }) => (
                 <motion.div
                   key={label}
@@ -222,7 +222,7 @@ const ContactSection = () => {
                       'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all',
                       isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
                     )}
-                    placeholder="John Doe"
+                    placeholder="Your name"
                   />
                 </div>
                 <div>
@@ -241,7 +241,7 @@ const ContactSection = () => {
                       'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all',
                       isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
                     )}
-                    placeholder="john@example.com"
+                    placeholder="you@example.com"
                   />
                 </div>
               </div>
@@ -262,7 +262,7 @@ const ContactSection = () => {
                     'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all',
                     isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
                   )}
-                  placeholder="Project Inquiry"
+                  placeholder="e.g. project inquiry"
                 />
               </div>
 
@@ -282,7 +282,7 @@ const ContactSection = () => {
                     'w-full px-4 py-3 rounded-xl border-b-2 outline-none transition-all resize-none',
                     isDark ? 'bg-dark-bg border-dark-border text-dark-text focus:border-primary' : 'bg-light-bg border-light-border text-light-text focus:border-primary'
                   )}
-                  placeholder="Tell me about your project..."
+                  placeholder="Tell me about your project…"
                 />
               </div>
 

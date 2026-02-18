@@ -178,30 +178,31 @@ const HeroSection = () => {
         ref={canvasRef}
         className="absolute inset-0 z-0 pointer-events-none"
       />
-      {/* Background Grid */}
-      <div className="absolute inset-0 opacity-20">
+      {/* Background Grid — light: visible; dark: very subtle for texture only */}
+      <div className={cn('absolute inset-0', isDark ? 'opacity-[0.04]' : 'opacity-20')}>
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(${isDark ? '#2A2A2A' : '#E4E4E7'} 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(${isDark ? '#262626' : '#E4E4E7'} 1px, transparent 1px)`,
             backgroundSize: '40px 40px',
           }}
         />
       </div>
 
-      {/* Bottom fade to next section */}
-      <div
-        className={cn(
-          'absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t pointer-events-none',
-          isDark ? 'from-dark-surface to-transparent' : 'from-light-surface to-transparent'
-        )}
-      />
+      {/* Bottom fade - only in light mode; dark mode stays solid for consistent #050505 */}
+      {!isDark && (
+        <div
+          className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-light-bg to-transparent pointer-events-none"
+        />
+      )}
 
-      {/* Glow Effect */}
-      <div
-        className="absolute top-1/4 -left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20"
-        style={{ background: 'linear-gradient(135deg, #007AFF, #FF3B30)' }}
-      />
+      {/* Glow Effect - hidden in dark mode so hero stays solid #050505 */}
+      {!isDark && (
+        <div
+          className="absolute top-1/4 -left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20"
+          style={{ background: 'linear-gradient(135deg, #007AFF, #FF3B30)' }}
+        />
+      )}
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 w-full relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -456,12 +457,12 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator - anchored to bottom of hero section */}
+      {/* Scroll indicator — transparent so it doesn't affect dark background */}
       <motion.div
         initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: motionDelay(1), duration: motionDuration }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 bg-transparent"
       >
         <motion.a
           href="#about"
@@ -469,7 +470,11 @@ const HeroSection = () => {
           aria-label="Scroll to about section"
           animate={orbitPaused ? { y: 0 } : { y: [0, 10, 0] }}
           transition={{ duration: orbitPaused ? 0 : 1.5, repeat: Infinity }}
-          className={cn('block', isDark ? 'text-dark-muted hover:text-dark-text' : 'text-light-muted hover:text-light-text', 'transition-colors')}
+          className={cn(
+            'block bg-transparent border-0 shadow-none no-underline',
+            isDark ? 'text-dark-muted hover:text-dark-text' : 'text-light-muted hover:text-light-text',
+            'transition-colors'
+          )}
         >
           <ChevronDown size={36} />
         </motion.a>

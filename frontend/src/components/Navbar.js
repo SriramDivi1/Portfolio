@@ -40,12 +40,11 @@ const Navbar = () => {
         animate={{ y: scrollDirection === 'down' && scrollPosition > 300 ? -100 : 0 }}
         transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-          isScrolled
-            ? isDark
-              ? 'bg-dark-bg/90 backdrop-blur-xl border-b border-dark-border'
-              : 'bg-light-bg/90 backdrop-blur-xl border-b border-light-border'
-            : 'bg-transparent'
+          'fixed top-0 left-0 right-0 z-50 duration-300',
+          isDark ? 'transition-[opacity,transform,border-color]' : 'transition-all',
+          !isScrolled && 'bg-transparent',
+          isScrolled && !isDark && 'bg-light-bg/90 backdrop-blur-xl border-b border-light-border',
+          isScrolled && isDark && 'bg-dark-bg border-b border-dark-border'
         )}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">

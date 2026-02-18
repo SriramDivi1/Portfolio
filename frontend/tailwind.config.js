@@ -7,12 +7,16 @@ module.exports = {
       colors: {
         primary: "#007AFF",
         secondary: "#FF3B30",
+        // Dark mode — single source of truth, no inline overrides
         dark: {
-          bg: "#050505",
-          surface: "#121212",
-          border: "#2A2A2A",
-          text: "#FFFFFF",
-          muted: "#A1A1AA"
+          bg: "#0a0a0a",
+          surface: "#141414",
+          "surface-hover": "#1a1a1a",
+          border: "#262626",
+          "border-subtle": "#333333",
+          text: "#fafafa",
+          muted: "#a1a1aa",
+          "muted-strong": "#71717a"
         },
         light: {
           bg: "#FAFAFA",
