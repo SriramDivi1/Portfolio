@@ -30,15 +30,16 @@ const Footer = () => {
           {/* Social Links */}
           <div className="flex gap-4">
             {[
-              { icon: Github, href: 'https://github.com/SriramDivi1', label: 'GitHub' },
-              { icon: Linkedin, href: 'https://www.linkedin.com/in/sriram-divi-dev', label: 'LinkedIn' },
-              { icon: Mail, href: 'mailto:sriramdivi716@gmail.com', label: 'Email' },
-            ].map(({ icon: Icon, href, label }) => (
+              { icon: Github, href: 'https://github.com/SriramDivi1', label: 'GitHub', ariaLabel: 'GitHub profile' },
+              { icon: Linkedin, href: 'https://www.linkedin.com/in/sriram-divi-dev', label: 'LinkedIn', ariaLabel: 'LinkedIn profile' },
+              { icon: Mail, href: 'mailto:sriramdivi716@gmail.com', label: 'Email', ariaLabel: 'Email me' },
+            ].map(({ icon: Icon, href, label, ariaLabel }) => (
               <motion.a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={ariaLabel}
                 data-testid={`footer-social-${label.toLowerCase()}`}
                 className={cn(
                   'p-2 rounded-full transition-all',

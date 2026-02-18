@@ -83,31 +83,33 @@ const Navbar = () => {
             {/* Theme Toggle & Mobile Menu */}
             <div className="flex items-center gap-4">
               <motion.button
+                type="button"
                 data-testid="theme-toggle"
                 onClick={toggleTheme}
+                aria-label={isDark ? 'Toggle light mode' : 'Toggle dark mode'}
                 className={cn(
                   'p-2 rounded-full transition-colors',
                   isDark ? 'bg-dark-surface text-dark-text' : 'bg-light-surface text-light-text'
                 )}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.1 }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.9 }}
               >
                 <AnimatePresence mode="wait">
                   {isDark ? (
                     <motion.div
                       key="sun"
-                      initial={{ rotate: -90, opacity: 0 }}
+                      initial={shouldReduceMotion ? false : { rotate: -90, opacity: 0 }}
                       animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
+                      exit={shouldReduceMotion ? false : { rotate: 90, opacity: 0 }}
                     >
                       <Sun size={20} />
                     </motion.div>
                   ) : (
                     <motion.div
                       key="moon"
-                      initial={{ rotate: 90, opacity: 0 }}
+                      initial={shouldReduceMotion ? false : { rotate: 90, opacity: 0 }}
                       animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
+                      exit={shouldReduceMotion ? false : { rotate: -90, opacity: 0 }}
                     >
                       <Moon size={20} />
                     </motion.div>

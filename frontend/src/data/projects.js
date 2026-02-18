@@ -24,6 +24,9 @@ export const projects = [
     impact: 'Demonstrates end-to-end ownership: API design, auth, DB, and responsive UI.',
     image: null,
     features: ['JWT authentication', 'Real-time updates', 'PostgreSQL + SQLAlchemy', 'Responsive dashboard'],
+    timeline: 'Side project · 2025',
+    longDescription: 'Flow is a full-stack productivity dashboard where I implemented JWT auth, real-time sync, and a clean API with FastAPI and SQLAlchemy. The frontend uses React 19 with a modern, responsive UI.',
+    learnings: ['End-to-end JWT flow and token refresh', 'Real-time updates with polling and state sync', 'REST API design with FastAPI and Pydantic'],
   },
   {
     id: 2,
@@ -46,6 +49,8 @@ export const projects = [
     impact: 'Shows real-time and optimistic UI patterns with a modern stack.',
     image: null,
     features: ['Real-time polling', 'Anonymous voting', 'Live results', 'Optimistic UI'],
+    timeline: 'Side project · 2025',
+    learnings: ['Supabase real-time subscriptions', 'Optimistic UI and rollback on error', 'Next.js 16 App Router patterns'],
   },
   {
     id: 3,
@@ -67,6 +72,9 @@ export const projects = [
     impact: 'Production-ready API with 15+ endpoints and full docs.',
     image: null,
     features: ['15+ REST endpoints', 'JWT & RBAC', 'Docker', 'Swagger docs'],
+    timeline: 'Jan 2026',
+    longDescription: 'A production-quality NestJS REST API with JWT authentication, role-based access (Admin/Employee), Prisma ORM, and full Swagger documentation. Dockerized for consistent deployment.',
+    learnings: ['NestJS modules and dependency injection', 'Prisma schema design and migrations', 'RBAC with guards and decorators'],
   },
   {
     id: 4,

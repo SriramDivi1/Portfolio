@@ -305,6 +305,7 @@ const ContactSection = () => {
                 data-testid="contact-submit-btn"
                 disabled={isSubmitting || isSubmitted}
                 aria-busy={isSubmitting}
+                aria-label={isSubmitting ? 'Sending message' : isSubmitted ? 'Message sent' : 'Send message'}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={cn(

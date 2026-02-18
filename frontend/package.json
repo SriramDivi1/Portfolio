@@ -7,7 +7,7 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "framer-motion": "^10.16.16",
-    "@studio-freight/lenis": "^1.0.42",
+    "lenis": "^1.1.17",
     "lucide-react": "^0.294.0",
     "sonner": "^1.2.4",
     "react-fast-marquee": "^1.6.2",

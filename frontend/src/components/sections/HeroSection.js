@@ -231,9 +231,18 @@ const HeroSection = () => {
               >
                 {TECH_ICONS.map((icon, i) => {
                   const angle = (360 / TECH_ICONS.length) * i;
+                  const floatDuration = 2 + (i % 3) * 0.5;
+                  const floatDelay = i * 0.3;
                   return (
-                    <div
+                    <motion.div
                       key={icon.name}
+                      animate={orbitPaused ? { y: 0 } : { y: [0, -8, 0, 8, 0] }}
+                      transition={{
+                        duration: orbitPaused ? 0 : floatDuration,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: floatDelay,
+                      }}
                       className="absolute left-1/2 top-1/2 w-10 h-10 -ml-5 -mt-5 flex items-center justify-center rounded-xl overflow-hidden transition-transform hover:scale-125"
                       style={{
                         transform: `rotate(${angle}deg) translateY(-${ORBIT_RADIUS}px) rotate(${-angle}deg)`,
@@ -248,7 +257,7 @@ const HeroSection = () => {
                         className="w-6 h-6 object-contain"
                         title={icon.name}
                       />
-                    </div>
+                    </motion.div>
                   );
                 })}
               </motion.div>
@@ -296,12 +305,12 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator - anchored to bottom of hero */}
         <motion.div
           initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: motionDelay(1), duration: motionDuration }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2"
         >
           <motion.a
             href="#about"

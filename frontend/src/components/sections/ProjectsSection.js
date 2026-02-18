@@ -92,6 +92,7 @@ const ProjectsSection = () => {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`Open ${project.title} on GitHub`}
                         data-testid={`project-github-${project.id}`}
                         className={cn(
                           'p-2 rounded-lg transition-colors',
@@ -106,6 +107,7 @@ const ProjectsSection = () => {
                         href={project.live}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`View ${project.title} live demo`}
                         className={cn(
                           'p-2 rounded-lg transition-colors',
                           isDark ? 'hover:bg-dark-bg text-dark-muted hover:text-dark-text' : 'hover:bg-light-bg text-light-muted hover:text-light-text'

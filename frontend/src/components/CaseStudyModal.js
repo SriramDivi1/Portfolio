@@ -8,6 +8,13 @@ import { cn } from '../lib/cn';
 /**
  * Accessible case-study modal: Escape to close, focus trap, aria-modal.
  */
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusables(container) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR));
+}
+
 export default function CaseStudyModal({ project, onClose }) {
   const { isDark } = useTheme();
   const overlayRef = useRef(null);
@@ -15,11 +22,31 @@ export default function CaseStudyModal({ project, onClose }) {
 
   useEffect(() => {
     if (!project) return;
-    const timer = requestAnimationFrame(() => focusRef.current?.focus());
+    const container = focusRef.current;
     const previouslyFocused = document.activeElement;
+    const timer = requestAnimationFrame(() => container?.focus());
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusables = getFocusables(container);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -94,15 +121,41 @@ export default function CaseStudyModal({ project, onClose }) {
             <h2 id="case-study-title" className={cn('font-display text-2xl md:text-3xl font-semibold mb-2', isDark ? 'text-dark-text' : 'text-light-text')}>
               {project.title}
             </h2>
-            <p className={cn('text-sm mb-4', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-              {project.description}
-            </p>
+
+            {/* Category & featured badges */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {project.category && (
+                <span className={cn('inline-block px-3 py-1 text-xs font-mono rounded-full', isDark ? 'bg-dark-bg text-dark-muted border border-dark-border' : 'bg-light-bg text-light-muted border border-light-border')}>
+                  {project.category}
+                </span>
+              )}
+              {project.featured && (
+                <span className="inline-block px-3 py-1 text-xs font-mono bg-primary/20 text-primary rounded-full">
+                  Featured
+                </span>
+              )}
+              {project.timeline && (
+                <span className={cn('text-xs font-mono', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+                  {project.timeline}
+                </span>
+              )}
+            </div>
 
             {project.role && (
               <p className={cn('text-sm mb-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                 <span className="font-semibold">Role:</span> {project.role}
               </p>
             )}
+
+            <p className={cn('text-sm mb-4', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+              {project.description}
+            </p>
+            {project.longDescription && (
+              <p className={cn('text-sm mb-4 leading-relaxed', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+                {project.longDescription}
+              </p>
+            )}
+
             {project.problem && (
               <div className="mb-4">
                 <h3 className={cn('font-mono text-xs uppercase tracking-wider mb-1', 'text-primary')}>Problem</h3>
@@ -122,6 +175,20 @@ export default function CaseStudyModal({ project, onClose }) {
               </div>
             )}
 
+            {project.highlights && project.highlights.length > 0 && (
+              <div className="mb-4">
+                <h3 className={cn('font-mono text-xs uppercase tracking-wider mb-2', 'text-primary')}>Key highlights</h3>
+                <ul className={cn('space-y-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+                  {project.highlights.map((h, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm">
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {project.features && project.features.length > 0 && (
               <ul className={cn('mb-4 space-y-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                 {project.features.map((f, i) => (
@@ -131,6 +198,20 @@ export default function CaseStudyModal({ project, onClose }) {
                   </li>
                 ))}
               </ul>
+            )}
+
+            {project.learnings && project.learnings.length > 0 && (
+              <div className="mb-4">
+                <h3 className={cn('font-mono text-xs uppercase tracking-wider mb-2', 'text-primary')}>Learnings</h3>
+                <ul className={cn('space-y-2', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+                  {project.learnings.map((l, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm">
+                      <span className="w-1.5 h-1.5 bg-secondary rounded-full flex-shrink-0" />
+                      {l}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
 
             <div className="flex flex-wrap gap-2 mb-6">
@@ -145,6 +226,7 @@ export default function CaseStudyModal({ project, onClose }) {
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`View ${project.title} source on GitHub`}
                   className={cn(
                     'inline-flex items-center gap-2 px-4 py-2 rounded-full font-mono text-sm transition-colors',
                     isDark ? 'bg-dark-bg text-dark-text hover:border-primary border border-dark-border' : 'bg-light-bg text-light-text hover:border-primary border border-light-border'
@@ -159,6 +241,7 @@ export default function CaseStudyModal({ project, onClose }) {
                   href={project.live}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Open ${project.title} live demo`}
                   className={cn(
                     'inline-flex items-center gap-2 px-4 py-2 rounded-full font-mono text-sm transition-colors',
                     'bg-primary text-white hover:opacity-90'

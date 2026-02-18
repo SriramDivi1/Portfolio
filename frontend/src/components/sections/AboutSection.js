@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { MapPin, Briefcase, GraduationCap, Code2 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { SectionHeader } from '../ui/SectionHeader';
@@ -14,6 +14,9 @@ const stats = [
 
 const AboutSection = () => {
   const { isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
+  const motionTransition = shouldReduceMotion ? { duration: 0 } : { duration: 0.5 };
+  const motionInitial = (x) => (shouldReduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x });
 
   return (
     <section
@@ -27,9 +30,10 @@ const AboutSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left - Image/Visual */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={motionInitial(-50)}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={motionTransition}
             className="relative"
           >
             <div className={cn('relative rounded-2xl overflow-hidden', isDark ? 'bg-dark-bg' : 'bg-light-bg')}>
@@ -65,9 +69,10 @@ const AboutSection = () => {
 
           {/* Right - Content */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={motionInitial(50)}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={motionTransition}
           >
             <p className={cn('text-lg leading-relaxed mb-6', isDark ? 'text-dark-muted' : 'text-light-muted')}>
               Recent Computer Science graduate from SRM University AP, eager to start my career in software development. I build modern web applications with React and Node.js, and I'm passionate about full stack development, clean code, and learning industry best practices.
@@ -86,7 +91,7 @@ const AboutSection = () => {
               ].map(({ icon: Icon, label, value }) => (
                 <motion.div
                   key={label}
-                  whileHover={{ y: -2 }}
+                  whileHover={shouldReduceMotion ? undefined : { y: -2 }}
                   className={cn('p-4 rounded-xl', isDark ? 'bg-dark-bg border border-dark-border' : 'bg-light-bg border border-light-border')}
                 >
                   <Icon size={20} className="text-primary mb-2" />
@@ -101,10 +106,10 @@ const AboutSection = () => {
               {stats.map(({ label, value }, index) => (
                 <motion.div
                   key={label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: shouldReduceMotion ? 0 : index * 0.1, duration: shouldReduceMotion ? 0 : 0.3 }}
                 >
                   <p className="font-display text-4xl font-semibold text-primary">{value}</p>
                   <p className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>{label}</p>
