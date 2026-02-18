@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Github, Linkedin, Mail, Download, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { cn } from '../../lib/cn';
 
 const roles = ['Front-End Developer', 'Back-End Developer', 'Full Stack Developer', 'Fresh Graduate'];
 
@@ -19,9 +20,11 @@ const TECH_ICONS = [
 
 const HeroSection = () => {
   const { isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [isTabVisible, setIsTabVisible] = useState(true);
 
   useEffect(() => {
     const currentRole = roles[roleIndex];
@@ -49,14 +52,22 @@ const HeroSection = () => {
     }
   }, [displayText, isTyping, roleIndex]);
 
+  useEffect(() => {
+    const handleVisibility = () => setIsTabVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
+
   const resumeUrl = 'https://drive.google.com/file/d/1fl0jcF1Y4j4QupJW7pIrLGMtBD_wAIuk/view?usp=sharing';
+  const orbitPaused = shouldReduceMotion || !isTabVisible;
+  const motionDuration = shouldReduceMotion ? 0 : 0.8;
+  const motionDelay = (d) => (shouldReduceMotion ? 0 : d);
 
   return (
     <section
       id="hero"
       data-testid="hero-section"
-      className={`min-h-screen flex items-center relative overflow-hidden ${isDark ? 'bg-dark-bg' : 'bg-light-bg'
-        }`}
+      className={cn('min-h-screen flex items-center relative overflow-hidden', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
     >
       {/* Background Grid */}
       <div className="absolute inset-0 opacity-20">
@@ -79,31 +90,29 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, x: shouldReduceMotion ? 0 : -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: motionDuration }}
           >
             {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 ${isDark ? 'bg-dark-surface border border-dark-border' : 'bg-light-surface border border-light-border'
-                }`}
+              transition={{ delay: motionDelay(0.2), duration: motionDuration }}
+              className={cn('inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6', isDark ? 'bg-dark-surface border border-dark-border' : 'bg-light-surface border border-light-border')}
             >
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className={`font-mono text-sm ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+              <span className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                 Available for opportunities
               </span>
             </motion.div>
 
             {/* Name */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className={`font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight mb-4 ${isDark ? 'text-dark-text' : 'text-light-text'
-                }`}
+              transition={{ delay: motionDelay(0.3), duration: motionDuration }}
+              className={cn('font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight mb-4', isDark ? 'text-dark-text' : 'text-light-text')}
             >
               Sriram
               <br />
@@ -112,12 +121,12 @@ const HeroSection = () => {
 
             {/* Typewriter */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: motionDelay(0.4), duration: motionDuration }}
               className="mb-8"
             >
-              <span className={`font-mono text-xl md:text-2xl ${isDark ? 'text-dark-muted' : 'text-light-muted'}`}>
+              <span className={cn('font-mono text-xl md:text-2xl', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                 {'> '}{displayText}
                 <span className="animate-pulse text-primary">|</span>
               </span>
@@ -125,9 +134,9 @@ const HeroSection = () => {
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: motionDelay(0.5), duration: motionDuration }}
               className="flex flex-wrap gap-4 mb-8"
             >
               <a
@@ -135,6 +144,7 @@ const HeroSection = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="download-resume-btn"
+                aria-label="Download resume (opens in new tab)"
                 className="group inline-flex items-center gap-2 px-6 py-3 bg-secondary text-white font-semibold rounded-full hover:glow-secondary transition-all"
               >
                 <Download size={20} />
@@ -143,10 +153,11 @@ const HeroSection = () => {
               <a
                 href="#contact"
                 data-testid="hire-me-btn"
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all ${isDark
-                  ? 'bg-dark-surface border border-dark-border text-dark-text hover:border-primary'
-                  : 'bg-light-surface border border-light-border text-light-text hover:border-primary'
-                  }`}
+                aria-label="Go to contact section"
+                className={cn(
+                  'inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all',
+                  isDark ? 'bg-dark-surface border border-dark-border text-dark-text hover:border-primary' : 'bg-light-surface border border-light-border text-light-text hover:border-primary'
+                )}
               >
                 Hire Me
               </a>
@@ -154,28 +165,29 @@ const HeroSection = () => {
 
             {/* Social Links */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: motionDelay(0.6), duration: motionDuration }}
               className="flex gap-4"
             >
               {[
-                { icon: Github, href: 'https://github.com/SriramDivi1', label: 'GitHub' },
-                { icon: Linkedin, href: 'https://www.linkedin.com/in/sriram-divi-dev', label: 'LinkedIn' },
-                { icon: Mail, href: 'mailto:sriramdivi716@gmail.com', label: 'Email' },
-              ].map(({ icon: Icon, href, label }) => (
+                { icon: Github, href: 'https://github.com/SriramDivi1', label: 'GitHub', ariaLabel: 'GitHub profile' },
+                { icon: Linkedin, href: 'https://www.linkedin.com/in/sriram-divi-dev', label: 'LinkedIn', ariaLabel: 'LinkedIn profile' },
+                { icon: Mail, href: 'mailto:sriramdivi716@gmail.com', label: 'Email', ariaLabel: 'Email me' },
+              ].map(({ icon: Icon, href, label, ariaLabel }) => (
                 <motion.a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={ariaLabel}
                   data-testid={`social-${label.toLowerCase()}`}
-                  className={`p-3 rounded-full transition-all ${isDark
-                    ? 'bg-dark-surface text-dark-muted hover:text-primary hover:bg-dark-border'
-                    : 'bg-light-surface text-light-muted hover:text-primary hover:bg-light-border'
-                    }`}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
+                  className={cn(
+                    'p-3 rounded-full transition-all',
+                    isDark ? 'bg-dark-surface text-dark-muted hover:text-primary hover:bg-dark-border' : 'bg-light-surface text-light-muted hover:text-primary hover:bg-light-border'
+                  )}
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.1, y: -2 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
                 >
                   <Icon size={20} />
                 </motion.a>
@@ -183,18 +195,38 @@ const HeroSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right Content - Abstract Shape + Orbiting Tech Icons */}
+          {/* Tech strip for md (tablet): horizontal row when orbit is hidden */}
+          <div className="flex lg:hidden md:flex hidden justify-center items-center gap-4 py-8 flex-wrap">
+            {TECH_ICONS.map((icon) => (
+              <div
+                key={icon.name}
+                className={cn(
+                  'w-10 h-10 flex items-center justify-center rounded-xl overflow-hidden transition-transform hover:scale-110',
+                  isDark ? 'bg-dark-surface border border-dark-border' : 'bg-light-surface border border-light-border'
+                )}
+              >
+                <img
+                  src={icon.src ?? (isDark ? icon.srcDark : icon.srcLight)}
+                  alt={icon.name}
+                  className="w-6 h-6 object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Right Content - Abstract Shape + Orbiting Tech Icons (lg only) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: motionDuration, delay: motionDelay(0.3) }}
             className="hidden lg:flex justify-center items-center"
           >
             <div className="relative w-[420px] h-[420px]">
-              {/* Orbiting tech icons - revolve around center */}
+              {/* Orbiting tech icons - revolve around center (paused when reduced motion or tab hidden) */}
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                animate={{ rotate: orbitPaused ? 0 : 360 }}
+                transition={{ duration: orbitPaused ? 0 : 25, repeat: Infinity, ease: 'linear' }}
                 className="absolute inset-0"
               >
                 {TECH_ICONS.map((icon, i) => {
@@ -224,36 +256,36 @@ const HeroSection = () => {
               {/* Center object - rings and glow */}
               <div className="absolute inset-[70px]">
                 <div className="relative w-full h-full">
-                  {/* Rotating rings */}
+                  {/* Rotating rings (paused when reduced motion or tab hidden) */}
                   <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                    animate={{ rotate: orbitPaused ? 0 : 360 }}
+                    transition={{ duration: orbitPaused ? 0 : 20, repeat: Infinity, ease: 'linear' }}
                     className="absolute inset-0 border-2 border-primary/30 rounded-full"
                   />
                   <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+                    animate={{ rotate: orbitPaused ? 0 : -360 }}
+                    transition={{ duration: orbitPaused ? 0 : 15, repeat: Infinity, ease: 'linear' }}
                     className="absolute inset-4 border-2 border-secondary/30 rounded-full"
                   />
                   <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+                    animate={{ rotate: orbitPaused ? 0 : 360 }}
+                    transition={{ duration: orbitPaused ? 0 : 10, repeat: Infinity, ease: 'linear' }}
                     className="absolute inset-8 border-2 border-primary/50 rounded-full"
                   />
                   {/* Center glow */}
-                  <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary to-secondary animate-pulse opacity-60 blur-xl" />
-                  <div className={`absolute inset-20 rounded-full bg-gradient-to-br from-primary to-secondary ${isDark ? '' : 'ring-2 ring-white/20'}`} />
-                  {/* Code symbols */}
+                  <div className={cn('absolute inset-16 rounded-full bg-gradient-to-br from-primary to-secondary opacity-60 blur-xl', !orbitPaused && 'animate-pulse')} />
+                  <div className={cn('absolute inset-20 rounded-full bg-gradient-to-br from-primary to-secondary', !isDark && 'ring-2 ring-white/20')} />
+                  {/* Code symbols (no bounce when reduced motion) */}
                   <motion.span
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    animate={orbitPaused ? { y: 0 } : { y: [0, -10, 0] }}
+                    transition={{ duration: orbitPaused ? 0 : 2, repeat: Infinity }}
                     className="absolute top-0 left-1/2 -translate-x-1/2 font-mono text-2xl text-primary"
                   >
                     {'</>'}
                   </motion.span>
                   <motion.span
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 2.5, repeat: Infinity }}
+                    animate={orbitPaused ? { y: 0 } : { y: [0, 10, 0] }}
+                    transition={{ duration: orbitPaused ? 0 : 2.5, repeat: Infinity }}
                     className="absolute bottom-0 left-1/2 -translate-x-1/2 font-mono text-2xl text-secondary"
                   >
                     {'{ }'}
@@ -266,17 +298,18 @@ const HeroSection = () => {
 
         {/* Scroll Indicator */}
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: motionDelay(1), duration: motionDuration }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <motion.a
             href="#about"
             data-testid="scroll-indicator"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className={isDark ? 'text-dark-muted' : 'text-light-muted'}
+            aria-label="Scroll to about section"
+            animate={orbitPaused ? { y: 0 } : { y: [0, 10, 0] }}
+            transition={{ duration: orbitPaused ? 0 : 1.5, repeat: Infinity }}
+            className={cn(isDark ? 'text-dark-muted' : 'text-light-muted')}
           >
             <ChevronDown size={32} />
           </motion.a>
