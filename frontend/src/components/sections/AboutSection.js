@@ -25,7 +25,11 @@ const AboutSection = () => {
       className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <SectionHeader label="// 01. ABOUT ME" title="Who I Am" />
+        <SectionHeader
+          label="// 01. ABOUT ME"
+          title="Who I Am"
+          subtitle="I turn ideas into production-ready software — full-stack development with a focus on clean architecture and user experience."
+        />
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left - Image/Visual */}
@@ -54,6 +58,7 @@ const AboutSection = () => {
                   <p className="pl-4"><span className="text-secondary">role</span>: <span className="text-green-400">"Computer Science Graduate · Fresher"</span>,</p>
                   <p className="pl-4"><span className="text-secondary">location</span>: <span className="text-green-400">"Bangalore, India"</span>,</p>
                   <p className="pl-4"><span className="text-secondary">passion</span>: <span className="text-green-400">"Building scalable web apps"</span>,</p>
+                  <p className="pl-4"><span className="text-secondary">availableForHire</span>: <span className="text-green-400">true</span>,</p>
                   <p className="pl-4"><span className="text-secondary">focus</span>: [</p>
                   <p className="pl-8"><span className="text-green-400">"Clean Code"</span>,</p>
                   <p className="pl-8"><span className="text-green-400">"API Security"</span>,</p>
@@ -73,10 +78,10 @@ const AboutSection = () => {
             transition={motionTransition}
           >
             <p className={cn('text-lg leading-relaxed mb-6', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-              Recent Computer Science graduate from SRM University AP, eager to start my career in software development. I build modern web applications with React and Node.js, and I'm passionate about full stack development, clean code, and learning industry best practices.
+              Recent Computer Science graduate from SRM University AP with hands-on experience across full-stack projects. I ship modern web apps with React, Node.js, and TypeScript — from REST APIs and auth to responsive UIs and deployment.
             </p>
             <p className={cn('text-lg leading-relaxed mb-8', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-              My focus includes React frontends, REST APIs, authentication, and responsive design. I'm looking for opportunities where I can contribute, grow, and deliver value from day one.
+              I'm focused on clean code, API design, and user experience. Open to roles where I can contribute from day one, learn from the team, and grow into a strong engineer.
             </p>
 
             {/* Info Cards */}

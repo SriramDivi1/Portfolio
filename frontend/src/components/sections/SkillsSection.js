@@ -67,7 +67,11 @@ const SkillsSection = () => {
       className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <SectionHeader label="// 03. SKILLS" title="Tech Stack" />
+        <SectionHeader
+          label="// 03. SKILLS"
+          title="Tech Stack"
+          subtitle="Technologies and tools I use to ship production-ready applications."
+        />
 
         {/* Marquee */}
         <motion.div
@@ -186,20 +190,25 @@ const SkillsSection = () => {
           </h3>
           <div className="flex flex-wrap gap-4">
             {[
-              'Foundations of Cybersecurity',
-              'Deloitte Data Analytics',
-              'Linux and SQL Security',
-              'Data Analytics Essentials',
-            ].map((cert, index) => (
+              { name: 'Foundations of Cybersecurity', issuer: 'Google' },
+              { name: 'Data Analytics', issuer: 'Deloitte' },
+              { name: 'Linux and SQL Security', issuer: 'Google' },
+              { name: 'Data Analytics Essentials', issuer: 'IBM' },
+            ].map(({ name, issuer }, index) => (
               <motion.span
-                key={cert}
+                key={name}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
               >
-                <TagPill className="cursor-default">{cert}</TagPill>
+                <TagPill className="cursor-default">
+                  {name}
+                  <span className={cn('ml-1 font-mono text-xs opacity-80', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+                    · {issuer}
+                  </span>
+                </TagPill>
               </motion.span>
             ))}
           </div>

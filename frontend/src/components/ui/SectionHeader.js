@@ -4,9 +4,9 @@ import { cn } from '../../lib/cn';
 import { useTheme } from '../../context/ThemeContext';
 
 /**
- * Section header with mono label (e.g. // 01. ABOUT) and display heading.
+ * Section header with mono label (e.g. // 01. ABOUT), display heading, and optional subtitle.
  */
-export function SectionHeader({ label, title, className, align = 'left' }) {
+export function SectionHeader({ label, title, subtitle, className, align = 'left' }) {
   const { isDark } = useTheme();
   const shouldReduceMotion = useReducedMotion();
   return (
@@ -26,6 +26,11 @@ export function SectionHeader({ label, title, className, align = 'left' }) {
       )}>
         {title}
       </h2>
+      {subtitle && (
+        <p className={cn('mt-3 text-lg md:text-xl max-w-2xl', isDark ? 'text-dark-muted' : 'text-light-muted', align === 'center' && 'mx-auto')}>
+          {subtitle}
+        </p>
+      )}
     </motion.div>
   );
 }

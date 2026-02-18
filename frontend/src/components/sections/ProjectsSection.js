@@ -27,7 +27,12 @@ const ProjectsSection = () => {
       className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <SectionHeader label="// 02. PROJECTS" title="What I've Built" className="mb-12" />
+        <SectionHeader
+          label="// 02. PROJECTS"
+          title="What I've Built"
+          subtitle="Full-stack and front-end projects — from dashboards and real-time apps to APIs and security tools."
+          className="mb-12"
+        />
 
         {/* Filter Tabs */}
         <motion.div

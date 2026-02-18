@@ -96,7 +96,11 @@ const ExperienceSection = () => {
       className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <SectionHeader label="// 04. EXPERIENCE" title="Where I've Worked" />
+        <SectionHeader
+          label="// 04. EXPERIENCE"
+          title="Where I've Worked"
+          subtitle="From internships and product design to full-stack projects and backend development."
+        />
 
         {/* Timeline */}
         <div className="relative">

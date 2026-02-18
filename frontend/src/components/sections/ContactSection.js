@@ -100,15 +100,29 @@ const ContactSection = () => {
       />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <SectionHeader label="// 05. CONTACT" title="Get in Touch" align="center" className="mb-6" />
+        <SectionHeader
+          label="// 05. CONTACT"
+          title="Get in Touch"
+          subtitle="Open to full-time roles, internships, and freelance projects."
+          align="center"
+          className="mb-6"
+        />
         <motion.p
           initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
-          className={cn('mt-2 mb-16 max-w-xl mx-auto text-center', isDark ? 'text-dark-muted' : 'text-light-muted')}
+          className={cn('mt-2 mb-4 max-w-xl mx-auto text-center', isDark ? 'text-dark-muted' : 'text-light-muted')}
         >
-          I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+          I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll get back to you within 24 hours.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={cn('mb-16 text-sm mx-auto text-center', isDark ? 'text-dark-muted/80' : 'text-light-muted/80')}
+        >
+          Recruiters: resume and project links are one click away in the hero and footer.
         </motion.p>
 
         <div className="grid lg:grid-cols-2 gap-12">

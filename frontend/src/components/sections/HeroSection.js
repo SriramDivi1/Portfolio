@@ -4,7 +4,7 @@ import { Github, Linkedin, Mail, Download, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { cn } from '../../lib/cn';
 
-const roles = ['Front-End Developer', 'Back-End Developer', 'Full Stack Developer', 'Software Engineer'];
+const roles = ['Front-End Developer', 'Back-End Developer', 'Full-Stack Developer', 'Software Engineer'];
 
 // Tech stack icons for orbit (Simple Icons CDN)
 const ORBIT_RADIUS = 150;
@@ -242,13 +242,21 @@ const HeroSection = () => {
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: motionDelay(0.4), duration: motionDuration }}
-              className="mb-8"
+              className="mb-3"
             >
               <span className={cn('font-mono text-xl md:text-2xl', isDark ? 'text-dark-muted' : 'text-light-muted')}>
                 {'> '}{displayText}
                 <span className="animate-pulse text-primary">|</span>
               </span>
             </motion.div>
+            <motion.p
+              initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: motionDelay(0.45), duration: motionDuration }}
+              className={cn('text-base md:text-lg mb-8', isDark ? 'text-dark-muted' : 'text-light-muted')}
+            >
+              I build scalable web apps with clean code and modern stacks - ready to deliver from day one.
+            </motion.p>
 
             {/* CTAs */}
             <motion.div
@@ -278,6 +286,17 @@ const HeroSection = () => {
                 )}
               >
                 Hire Me
+              </a>
+              <a
+                href="#projects"
+                data-testid="view-work-btn"
+                aria-label="Scroll to projects section"
+                className={cn(
+                  'inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all border',
+                  isDark ? 'bg-transparent border-dark-border text-dark-muted hover:text-dark-text hover:border-primary' : 'bg-transparent border-light-border text-light-muted hover:text-light-text hover:border-primary'
+                )}
+              >
+                View my work
               </a>
             </motion.div>
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Github, Linkedin, Mail, Heart } from 'lucide-react';
+import { Github, Linkedin, Mail, Heart, Code2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { cn } from '../lib/cn';
 
@@ -53,10 +53,16 @@ const Footer = () => {
             ))}
           </div>
 
-          {/* Copyright */}
-          <p className={cn('font-mono text-sm flex items-center gap-1', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-            Built with <Heart size={14} className="text-secondary" /> by Sriram Divi © {currentYear}
-          </p>
+          {/* Copyright & tech badge */}
+          <div className="flex flex-col items-center md:items-end gap-1">
+            <p className={cn('font-mono text-xs flex items-center gap-1', isDark ? 'text-dark-muted/80' : 'text-light-muted/80')}>
+              <Code2 size={12} className="shrink-0" />
+              React · Tailwind · Framer Motion
+            </p>
+            <p className={cn('font-mono text-sm flex items-center gap-1', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+              Built with <Heart size={14} className="text-secondary" /> by Sriram Divi © {currentYear}
+            </p>
+          </div>
         </div>
       </div>
     </footer>
