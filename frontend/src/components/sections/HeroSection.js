@@ -37,7 +37,7 @@ const HeroSection = () => {
     }
   }, [displayText, isTyping, roleIndex]);
 
-  const resumeUrl = '/Profile.pdf'; // Replace with your resume URL or keep PDF in public/
+  const resumeUrl = 'https://drive.google.com/file/d/1fl0jcF1Y4j4QupJW7pIrLGMtBD_wAIuk/view?usp=sharing';
 
   return (
     <section
@@ -120,7 +120,8 @@ const HeroSection = () => {
             >
               <a
                 href={resumeUrl}
-                download
+                target="_blank"
+                rel="noopener noreferrer"
                 data-testid="download-resume-btn"
                 className="group inline-flex items-center gap-2 px-6 py-3 bg-secondary text-white font-semibold rounded-full hover:glow-secondary transition-all"
               >

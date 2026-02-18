@@ -17,6 +17,8 @@ const skillCategories = [
   {
     name: 'Backend',
     skills: [
+      { name: 'Java', level: 85 },
+      { name: 'Python', level: 85 },
       { name: 'NestJS', level: 85 },
       { name: 'Node.js', level: 80 },
       { name: 'Express', level: 75 },
@@ -38,7 +40,7 @@ const skillCategories = [
 
 const marqueeSkills = [
   'React', 'NestJS', 'TypeScript', 'PostgreSQL', 'Docker', 'Node.js',
-  'JavaScript', 'Prisma', 'JWT', 'REST APIs', 'MongoDB', 'Git',
+  'JavaScript', 'Java', 'Python', 'Prisma', 'JWT', 'REST APIs', 'MongoDB', 'Git',
   'Swagger', 'Express', 'HTML', 'CSS', 'Postman', 'VS Code',
 ];
 
@@ -62,9 +64,8 @@ const SkillsSection = () => {
           <span className={`font-mono text-sm ${isDark ? 'text-primary' : 'text-primary'}`}>
             {'// 03. SKILLS'}
           </span>
-          <h2 className={`font-display text-4xl md:text-6xl font-semibold mt-4 ${
-            isDark ? 'text-dark-text' : 'text-light-text'
-          }`}>
+          <h2 className={`font-display text-4xl md:text-6xl font-semibold mt-4 ${isDark ? 'text-dark-text' : 'text-light-text'
+            }`}>
             Tech Stack
           </h2>
         </motion.div>
@@ -86,9 +87,8 @@ const SkillsSection = () => {
             {marqueeSkills.map((skill, index) => (
               <span
                 key={index}
-                className={`mx-6 font-mono text-2xl md:text-4xl font-semibold ${
-                  index % 2 === 0 ? 'text-primary' : isDark ? 'text-dark-muted' : 'text-light-muted'
-                }`}
+                className={`mx-6 font-mono text-2xl md:text-4xl font-semibold ${index % 2 === 0 ? 'text-primary' : isDark ? 'text-dark-muted' : 'text-light-muted'
+                  }`}
               >
                 {skill}
               </span>
@@ -106,15 +106,13 @@ const SkillsSection = () => {
               viewport={{ once: true }}
               transition={{ delay: categoryIndex * 0.1 }}
               data-testid={`skill-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`p-6 rounded-2xl ${
-                isDark
+              className={`p-6 rounded-2xl ${isDark
                   ? 'bg-dark-bg border border-dark-border'
                   : 'bg-light-bg border border-light-border'
-              }`}
+                }`}
             >
-              <h3 className={`font-display text-xl font-semibold mb-6 ${
-                isDark ? 'text-dark-text' : 'text-light-text'
-              }`}>
+              <h3 className={`font-display text-xl font-semibold mb-6 ${isDark ? 'text-dark-text' : 'text-light-text'
+                }`}>
                 {category.name}
               </h3>
               <div className="space-y-4">
@@ -127,20 +125,17 @@ const SkillsSection = () => {
                     transition={{ delay: skillIndex * 0.05 }}
                   >
                     <div className="flex justify-between mb-2">
-                      <span className={`font-mono text-sm ${
-                        isDark ? 'text-dark-text' : 'text-light-text'
-                      }`}>
+                      <span className={`font-mono text-sm ${isDark ? 'text-dark-text' : 'text-light-text'
+                        }`}>
                         {skill.name}
                       </span>
-                      <span className={`font-mono text-sm ${
-                        isDark ? 'text-dark-muted' : 'text-light-muted'
-                      }`}>
+                      <span className={`font-mono text-sm ${isDark ? 'text-dark-muted' : 'text-light-muted'
+                        }`}>
                         {skill.level}%
                       </span>
                     </div>
-                    <div className={`h-2 rounded-full overflow-hidden ${
-                      isDark ? 'bg-dark-border' : 'bg-light-border'
-                    }`}>
+                    <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-dark-border' : 'bg-light-border'
+                      }`}>
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${skill.level}%` }}
@@ -163,9 +158,8 @@ const SkillsSection = () => {
           viewport={{ once: true }}
           className="mt-16"
         >
-          <h3 className={`font-display text-2xl font-semibold mb-6 ${
-            isDark ? 'text-dark-text' : 'text-light-text'
-          }`}>
+          <h3 className={`font-display text-2xl font-semibold mb-6 ${isDark ? 'text-dark-text' : 'text-light-text'
+            }`}>
             Certifications
           </h3>
           <div className="flex flex-wrap gap-4">
@@ -182,11 +176,10 @@ const SkillsSection = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className={`px-4 py-2 rounded-full font-mono text-sm ${
-                  isDark
+                className={`px-4 py-2 rounded-full font-mono text-sm ${isDark
                     ? 'bg-dark-bg border border-dark-border text-dark-muted hover:border-primary'
                     : 'bg-light-bg border border-light-border text-light-muted hover:border-primary'
-                } transition-colors`}
+                  } transition-colors`}
               >
                 {cert}
               </motion.span>
