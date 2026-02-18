@@ -1,0 +1,38 @@
+/* App-specific styles */
+
+/* Smooth scroll offset for fixed navbar */
+html {
+  scroll-padding-top: 80px;
+}
+
+/* Section transitions */
+section {
+  transition: background-color 0.3s ease;
+}
+
+/* Custom cursor for interactive elements */
+a, button {
+  cursor: pointer;
+}
+
+/* Focus states */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

@@ -1,0 +1,150 @@
+{
+  "design_system": {
+    "identity": {
+      "name": "Sriram Divi Portfolio",
+      "archetype": "The Performance Pro x Swiss High-Contrast",
+      "vibe": "Technical, Precision, Bold, Interactive",
+      "principles": [
+        "Fusion over Imitation: Mix Swiss typography with Cyberpunk aesthetics",
+        "Emotion First: Confidence and Competence",
+        "Content is King: The work speaks, the design amplifies",
+        "Negative Space: Luxurious spacing to frame content"
+      ]
+    },
+    "colors": {
+      "palette": {
+        "primary": "#007AFF",
+        "secondary": "#FF3B30",
+        "dark": {
+          "background": "#050505",
+          "surface": "#121212",
+          "border": "#2A2A2A",
+          "text_primary": "#FFFFFF",
+          "text_secondary": "#A1A1AA"
+        },
+        "light": {
+          "background": "#FAFAFA",
+          "surface": "#FFFFFF",
+          "border": "#E4E4E7",
+          "text_primary": "#09090B",
+          "text_secondary": "#52525B"
+        }
+      },
+      "usage": {
+        "gradients": "Avoid full-screen gradients. Use subtle mesh gradients for 'glow' effects only.",
+        "accents": "Use Primary for main actions, Secondary for 'Hire Me' or urgent CTAs."
+      }
+    },
+    "typography": {
+      "font_family": {
+        "headings": "Clash Display, sans-serif",
+        "body": "Manrope, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "scale": {
+        "h1": "text-6xl md:text-8xl font-semibold tracking-tight",
+        "h2": "text-4xl md:text-6xl font-medium tracking-tight",
+        "h3": "text-2xl md:text-3xl font-medium",
+        "body": "text-base md:text-lg leading-relaxed",
+        "mono": "text-sm md:text-base tracking-wide"
+      },
+      "imports": [
+        "https://api.fontshare.com/v2/css?f[]=clash-display@600,500,400&display=swap",
+        "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      ]
+    },
+    "layout": {
+      "grid_system": "Bento Grid (Mode A: Tetris)",
+      "spacing": {
+        "container_padding": "px-6 md:px-12 lg:px-24",
+        "section_gap": "py-24 md:py-32",
+        "element_gap": "gap-6 md:gap-8"
+      },
+      "container": "max-w-7xl mx-auto"
+    },
+    "motion": {
+      "library": "framer-motion",
+      "scroll": "lenis",
+      "animations": {
+        "fade_up": {
+          "initial": { "opacity": 0, "y": 20 },
+          "whileInView": { "opacity": 1, "y": 0 },
+          "transition": { "duration": 0.5, "ease": "easeOut" }
+        },
+        "stagger_children": {
+          "visible": { "transition": { "staggerChildren": 0.1 } }
+        },
+        "hover_card": {
+          "whileHover": { "y": -5, "scale": 1.01 },
+          "transition": { "duration": 0.2 }
+        }
+      }
+    },
+    "components": {
+      "HeroSection": {
+        "description": "Asymmetric layout. Left: Massive 'Full Stack Developer' text with 'Sriram Divi' in a smaller mono badge. Right: Interactive 3D element or abstract WebGL shape.",
+        "features": ["Typewriter effect for roles", "CTA: Download Resume (Secondary Color)", "Social Links (Icon only)"]
+      },
+      "AboutSection": {
+        "description": "Split layout. Image on left (stylized), Text on right. Use 'JetBrains Mono' for a 'terminal-like' bio summary.",
+        "features": ["Stats counter (Years exp, Projects)", "Clean typography"]
+      },
+      "ProjectsGallery": {
+        "description": "Bento Grid layout. Mix of large (featured) and small (side) project cards.",
+        "features": ["Hover reveals tech stack", "Glassmorphism overlay for text", "Filter tabs (All, React, Backend)"]
+      },
+      "SkillsSection": {
+        "description": "Infinite Marquee (The 'Editorial Ribbon' style) for logos. Plus a 'Radar Chart' or 'Skill Bars' for core competencies.",
+        "features": ["React Fast Marquee", "Categorized skills (Frontend, Backend, DevOps)"]
+      },
+      "ExperienceTimeline": {
+        "description": "Vertical line with glowing nodes (The 'Tracing Beam' concept).",
+        "features": ["Alternating sides for desktop", "Collapsible details"]
+      },
+      "ContactForm": {
+        "description": "Minimalist form. High contrast inputs. No borders, just bottom border or solid background.",
+        "features": ["Validation with Sonner toasts", "Floating labels"]
+      },
+      "ThemeToggle": {
+        "description": "Fixed position or in Nav. Smooth transition icon switch (Sun/Moon)."
+      }
+    },
+    "assets": {
+      "images": {
+        "hero_bg": "https://images.unsplash.com/photo-1764258560078-fe9909b3da5c?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "project_placeholder_1": "https://images.unsplash.com/photo-1751200065697-4461cc2b43cb?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "project_placeholder_2": "https://images.unsplash.com/photo-1645070858656-816d780df8e0?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "project_placeholder_3": "https://images.unsplash.com/photo-1588504225021-7f3c3273896d?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "abstract_shape": "https://images.unsplash.com/photo-1767727239153-8bf7f6be90e6?crop=entropy&cs=srgb&fm=jpg&q=85"
+      },
+      "icons": "lucide-react"
+    }
+  },
+  "instructions_to_main_agent": {
+    "setup": [
+      "Install dependencies: framer-motion, lenis, clsx, tailwind-merge, lucide-react, sonner, react-fast-marquee",
+      "Configure Tailwind with the specified colors and fonts.",
+      "Add the font imports to index.css."
+    ],
+    "implementation_order": [
+      "Setup Layout (Navbar, Footer, ThemeProvider)",
+      "Build Hero Section (Focus on impact)",
+      "Build Projects Section (Focus on Grid)",
+      "Build Skills & Experience",
+      "Build Contact Form",
+      "Polish with Animations"
+    ],
+    "critical_rules": [
+      "DO NOT use generic 'Inter' font for headings.",
+      "Ensure Dark Mode is the default or highly polished.",
+      "Use 'data-testid' for all interactive elements.",
+      "Keep the design 'Airy' - use the spacing scale generously."
+    ]
+  },
+  "universal_guidelines": [
+    "Avoid 'AI Slop' - no generic centered layouts.",
+    "Dark colors must be solid or subtle noise, NO ugly gradients.",
+    "Micro-animations on every interaction.",
+    "Use 'sonner' for all notifications."
+  ]
+}
