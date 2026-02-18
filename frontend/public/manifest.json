@@ -1,0 +1,10 @@
+{
+  "name": "Sriram Divi Portfolio",
+  "short_name": "Sriram Divi",
+  "description": "Full Stack Developer portfolio — React, Node.js, TypeScript. Projects, experience, and contact.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#050505",
+  "background_color": "#050505",
+  "icons": []
+}

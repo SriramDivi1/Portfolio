@@ -63,8 +63,6 @@ const AboutSection = () => {
                 </div>
               </CardInner>
             </div>
-            {/* Decorative element */}
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 border-2 border-primary rounded-2xl -z-10" />
           </motion.div>
 
           {/* Right - Content */}
