@@ -33,7 +33,6 @@ export const projects = [
     impact: 'Shows real-time and optimistic UI patterns with a modern stack.',
     image: null,
     features: ['Real-time polling', 'Anonymous voting', 'Live results', 'Optimistic UI'],
-    timeline: 'Side project · 2025',
     learnings: ['Supabase real-time subscriptions', 'Optimistic UI and rollback on error', 'Next.js 16 App Router patterns'],
   },
   {
@@ -57,7 +56,6 @@ export const projects = [
     impact: 'Demonstrates end-to-end ownership: API design, auth, DB, and responsive UI.',
     image: null,
     features: ['JWT authentication', 'Real-time updates', 'PostgreSQL + SQLAlchemy', 'Responsive dashboard'],
-    timeline: 'Side project · 2025',
     longDescription: 'Flow is a full-stack productivity dashboard where I implemented JWT auth, real-time sync, and a clean API with FastAPI and SQLAlchemy. The frontend uses React 19 with a modern, responsive UI.',
     learnings: ['End-to-end JWT flow and token refresh', 'Real-time updates with polling and state sync', 'REST API design with FastAPI and Pydantic'],
   },
