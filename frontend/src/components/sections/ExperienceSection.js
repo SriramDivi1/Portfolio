@@ -73,12 +73,6 @@ const experiences = [
 
 const education = [
   {
-    degree: 'M.Tech - Computer Science',
-    institution: 'SRM University AP',
-    period: 'Pursuing',
-    cgpa: '7.29',
-  },
-  {
     degree: 'B.Tech - Computer Science & Engineering',
     institution: 'R.V.R & J.C. College of Engineering',
     period: 'Aug 2019 - Jun 2023',
