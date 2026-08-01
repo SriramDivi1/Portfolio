@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Send, Mail, MapPin, Phone, Loader2, CheckCircle } from 'lucide-react';
+import { Send, Mail, MapPin, Phone, Loader2, CheckCircle, Copy } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { SectionHeader } from '../ui/SectionHeader';
@@ -23,6 +23,11 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+
+  const handleCopyEmail = (email) => {
+    navigator.clipboard.writeText(email);
+    toast.success('Email address copied to clipboard!');
+  };
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -134,39 +139,56 @@ const ContactSection = () => {
           >
             <div className="space-y-6">
               {[
-                { icon: Mail, label: 'Email', value: 'sriramdivi716@gmail.com', href: 'mailto:sriramdivi716@gmail.com' },
-                { icon: Phone, label: 'Phone', value: '+91 93985 42488', href: 'tel:+919398542488' },
-                { icon: MapPin, label: 'Location', value: 'Bangalore, India', href: null },
-              ].map(({ icon: Icon, label, value, href }) => (
+                { icon: Mail, label: 'Email', value: 'sriramdivi716@gmail.com', href: 'mailto:sriramdivi716@gmail.com', copyable: true },
+                { icon: Phone, label: 'Phone', value: '+91 93985 42488', href: 'tel:+919398542488', copyable: true },
+                { icon: MapPin, label: 'Location', value: 'Bangalore, India', href: null, copyable: false },
+              ].map(({ icon: Icon, label, value, href, copyable }) => (
                 <motion.div
                   key={label}
                   whileHover={{ x: 5 }}
                   className={cn(
-                    'flex items-center gap-4 p-4 rounded-xl',
+                    'flex items-center justify-between p-4 rounded-xl',
                     isDark ? 'bg-dark-bg border border-dark-border' : 'bg-light-bg border border-light-border'
                   )}
                 >
-                  <div className={cn('p-3 rounded-xl', isDark ? 'bg-dark-surface' : 'bg-light-surface')}>
-                    <Icon size={24} className="text-primary" />
-                  </div>
-                  <div>
-                    <p className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-                      {label}
-                    </p>
-                    {href ? (
-                      <a
-                        href={href}
-                        data-testid={`contact-${label.toLowerCase()}`}
-                        className={cn('font-semibold hover:text-primary transition-colors', isDark ? 'text-dark-text' : 'text-light-text')}
-                      >
-                        {value}
-                      </a>
-                    ) : (
-                      <p className={cn('font-semibold', isDark ? 'text-dark-text' : 'text-light-text')}>
-                        {value}
+                  <div className="flex items-center gap-4">
+                    <div className={cn('p-3 rounded-xl', isDark ? 'bg-dark-surface' : 'bg-light-surface')}>
+                      <Icon size={24} className="text-primary" />
+                    </div>
+                    <div>
+                      <p className={cn('font-mono text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
+                        {label}
                       </p>
-                    )}
+                      {href ? (
+                        <a
+                          href={href}
+                          data-testid={`contact-${label.toLowerCase()}`}
+                          className={cn('font-semibold hover:text-primary transition-colors', isDark ? 'text-dark-text' : 'text-light-text')}
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <p className={cn('font-semibold', isDark ? 'text-dark-text' : 'text-light-text')}>
+                          {value}
+                        </p>
+                      )}
+                    </div>
                   </div>
+                  {copyable && (
+                    <button
+                      type="button"
+                      onClick={() => handleCopyEmail(value)}
+                      aria-label={`Copy ${label} to clipboard`}
+                      className={cn(
+                        'p-2 rounded-lg transition-colors border',
+                        isDark
+                          ? 'bg-dark-surface hover:bg-dark-border text-dark-muted hover:text-dark-text border-dark-border'
+                          : 'bg-light-surface hover:bg-light-border text-light-muted hover:text-light-text border-light-border'
+                      )}
+                    >
+                      <Copy size={16} className="text-primary" />
+                    </button>
+                  )}
                 </motion.div>
               ))}
             </div>

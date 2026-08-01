@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ExternalLink, Github, Folder, FileText } from 'lucide-react';
+import { ExternalLink, Github, Folder, FileText, Search, X } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Tag } from '../ui/Tag';
@@ -12,13 +12,23 @@ const ProjectsSection = () => {
   const { isDark } = useTheme();
   const shouldReduceMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
   const motionTransition = shouldReduceMotion ? { duration: 0 } : { delay: 0, duration: 0.3 };
 
-  const filteredProjects = useMemo(
-    () => (activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory)),
-    [activeCategory]
-  );
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      const matchesCategory = activeCategory === 'All' || project.category === activeCategory;
+      const queryLower = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !queryLower ||
+        project.title.toLowerCase().includes(queryLower) ||
+        project.description.toLowerCase().includes(queryLower) ||
+        project.tech.some((t) => t.toLowerCase().includes(queryLower));
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
 
   return (
     <section
@@ -34,43 +44,98 @@ const ProjectsSection = () => {
           className="mb-12"
         />
 
-        {/* Filter Tabs */}
+        {/* Filter Tabs & Search Bar */}
         <motion.div
           initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={motionTransition}
-          className="flex flex-wrap gap-4 mb-12"
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12"
         >
-          {categories.map((category) => (
-            <button
-              key={category}
-              data-testid={`filter-${category.toLowerCase()}`}
-              onClick={() => setActiveCategory(category)}
+          {/* Category Pills */}
+          <div className="flex flex-wrap gap-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                data-testid={`filter-${category.toLowerCase()}`}
+                onClick={() => setActiveCategory(category)}
+                className={cn(
+                  'px-5 py-2 rounded-full font-mono text-sm transition-all border',
+                  activeCategory === category
+                    ? 'bg-primary text-white border-primary'
+                    : isDark
+                      ? 'bg-dark-surface text-dark-muted hover:text-dark-text border-dark-border'
+                      : 'bg-light-surface text-light-muted hover:text-light-text border-light-border'
+                )}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Box */}
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search projects or tech..."
               className={cn(
-                'px-6 py-2 rounded-full font-mono text-sm transition-all border',
-                activeCategory === category
-                  ? 'bg-primary text-white border-primary'
-                  : isDark
-                    ? 'bg-dark-surface text-dark-muted hover:text-dark-text border-dark-border'
-                    : 'bg-light-surface text-light-muted hover:text-light-text border-light-border'
+                'w-full pl-10 pr-9 py-2 rounded-full text-sm font-mono outline-none border transition-colors',
+                isDark
+                  ? 'bg-dark-surface border-dark-border text-dark-text placeholder:text-dark-muted focus:border-primary'
+                  : 'bg-light-surface border-light-border text-light-text placeholder:text-light-muted focus:border-primary'
               )}
-            >
-              {category}
-            </button>
-          ))}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </motion.div>
 
         {/* Projects Grid - Bento Style */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={motionTransition}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
+          {filteredProjects.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={cn(
+                'py-16 text-center rounded-2xl border border-dashed p-8 font-mono',
+                isDark ? 'border-dark-border text-dark-muted' : 'border-light-border text-light-muted'
+              )}
+            >
+              <p className={cn('text-base font-semibold mb-2', isDark ? 'text-dark-text' : 'text-light-text')}>
+                No projects matching "{searchQuery || activeCategory}"
+              </p>
+              <p className="text-xs text-muted-foreground mb-4">Try checking your spelling or clearing filters.</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveCategory('All');
+                  setSearchQuery('');
+                }}
+                className="px-5 py-2 rounded-full text-xs bg-primary text-white hover:bg-primary/90 transition-colors"
+              >
+                Reset Filters
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`${activeCategory}-${searchQuery}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={motionTransition}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
             {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
@@ -174,6 +239,7 @@ const ProjectsSection = () => {
               </motion.div>
             ))}
           </motion.div>
+          )}
         </AnimatePresence>
 
         <CaseStudyModal project={selectedProject} onClose={() => setSelectedProject(null)} />

@@ -35,8 +35,8 @@ const HeroSection = () => {
     const canvas = canvasRef.current;
     const section = sectionRef.current;
     if (!canvas || !section) return;
-
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     let lastSpawnTime = 0;
 
     const resize = () => {
@@ -161,7 +161,7 @@ const HeroSection = () => {
     return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
 
-  const resumeUrl = 'https://drive.google.com/file/d/1fl0jcF1Y4j4QupJW7pIrLGMtBD_wAIuk/view?usp=sharing';
+  const resumeUrl = 'https://drive.google.com/file/d/1wjSlvJXTGWO67cNrRhENUyV2OQscH0PW/view?usp=sharing';
   const orbitPaused = shouldReduceMotion || !isTabVisible;
   const motionDuration = shouldReduceMotion ? 0 : 0.8;
   const motionDelay = (d) => (shouldReduceMotion ? 0 : d);

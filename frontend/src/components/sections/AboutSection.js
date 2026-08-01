@@ -78,7 +78,7 @@ const AboutSection = () => {
             transition={motionTransition}
           >
             <p className={cn('text-lg leading-relaxed mb-6', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-              Recent Computer Science graduate from SRM University AP with hands-on experience across full-stack projects. I ship modern web apps with React, Node.js, and TypeScript — from REST APIs and auth to responsive UIs and deployment.
+              Recent Computer Science graduate from R.V.R & J.C College of Engineering with hands-on experience across full-stack projects. I ship modern web apps with React, Node.js, and TypeScript — from REST APIs and auth to responsive UIs and deployment.
             </p>
             <p className={cn('text-lg leading-relaxed mb-8', isDark ? 'text-dark-muted' : 'text-light-muted')}>
               I'm focused on clean code, API design, and user experience. Open to roles where I can contribute from day one, learn from the team, and grow into a strong engineer.
@@ -89,7 +89,7 @@ const AboutSection = () => {
               {[
                 { icon: MapPin, label: 'Location', value: 'Bangalore, India' },
                 { icon: Briefcase, label: 'Status', value: 'Fresher' },
-                { icon: GraduationCap, label: 'Education', value: 'SRM University AP · CSE' },
+                { icon: GraduationCap, label: 'Education', value: 'R.V.R & J.C College of Engineering · CSE' },
                 { icon: Code2, label: 'Specialty', value: 'Full Stack' },
               ].map(({ icon: Icon, label, value }) => (
                 <motion.div

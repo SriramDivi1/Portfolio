@@ -4,7 +4,7 @@
  */
 export const projects = [
   {
-    id: 5,
+    id: 1,
     title: 'HealthPay',
     description: 'A React single-page application for reviewing medical insurance claims, cross-checking extracted JSON data against source PDFs with smart navigation.',
     tech: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'react-pdf'],
