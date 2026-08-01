@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ExternalLink, Github, Folder, FileText, Search, X } from 'lucide-react';
+import { ExternalLink, Github, Folder, FileText } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Tag } from '../ui/Tag';
@@ -12,40 +12,14 @@ const ProjectsSection = () => {
   const { isDark } = useTheme();
   const shouldReduceMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
   const motionTransition = shouldReduceMotion ? { duration: 0 } : { delay: 0, duration: 0.3 };
 
-  useEffect(() => {
-    const handleSelectProject = (e) => {
-      if (e.detail) {
-        setSearchQuery(e.detail);
-        setActiveCategory('All');
-      }
-    };
-    window.addEventListener('select-portfolio-project', handleSelectProject);
-    return () => window.removeEventListener('select-portfolio-project', handleSelectProject);
-  }, []);
-
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
-      const matchesCategory = activeCategory === 'All' || project.category === activeCategory;
-      const queryLower = searchQuery.toLowerCase().trim();
-      if (!queryLower) return matchesCategory;
-
-      const matchesSearch =
-        project.title.toLowerCase().includes(queryLower) ||
-        project.description.toLowerCase().includes(queryLower) ||
-        (project.longDescription && project.longDescription.toLowerCase().includes(queryLower)) ||
-        project.category?.toLowerCase().includes(queryLower) ||
-        project.role?.toLowerCase().includes(queryLower) ||
-        project.tech.some((t) => t.toLowerCase().includes(queryLower)) ||
-        (project.highlights && project.highlights.some((h) => h.toLowerCase().includes(queryLower))) ||
-        (project.features && project.features.some((f) => f.toLowerCase().includes(queryLower)));
-
-      return matchesCategory && matchesSearch;
+      return activeCategory === 'All' || project.category === activeCategory;
     });
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory]);
 
   return (
     <section
@@ -61,60 +35,31 @@ const ProjectsSection = () => {
           className="mb-12"
         />
 
-        {/* Filter Tabs & Search Bar */}
+        {/* Filter Tabs */}
         <motion.div
           initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={motionTransition}
-          className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12"
+          className="flex flex-wrap gap-3 mb-12"
         >
-          {/* Category Pills */}
-          <div className="flex flex-wrap gap-3">
-            {categories.map((category) => (
-              <button
-                key={category}
-                data-testid={`filter-${category.toLowerCase()}`}
-                onClick={() => setActiveCategory(category)}
-                className={cn(
-                  'px-5 py-2 rounded-full font-mono text-sm transition-all border',
-                  activeCategory === category
-                    ? 'bg-primary text-white border-primary'
-                    : isDark
-                      ? 'bg-dark-surface text-dark-muted hover:text-dark-text border-dark-border'
-                      : 'bg-light-surface text-light-muted hover:text-light-text border-light-border'
-                )}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Box */}
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search projects or tech..."
+          {categories.map((category) => (
+            <button
+              key={category}
+              data-testid={`filter-${category.toLowerCase()}`}
+              onClick={() => setActiveCategory(category)}
               className={cn(
-                'w-full pl-10 pr-9 py-2 rounded-full text-sm font-mono outline-none border transition-colors',
-                isDark
-                  ? 'bg-dark-surface border-dark-border text-dark-text placeholder:text-dark-muted focus:border-primary'
-                  : 'bg-light-surface border-light-border text-light-text placeholder:text-light-muted focus:border-primary'
+                'px-5 py-2 rounded-full font-mono text-sm transition-all border',
+                activeCategory === category
+                  ? 'bg-primary text-white border-primary'
+                  : isDark
+                    ? 'bg-dark-surface text-dark-muted hover:text-dark-text border-dark-border'
+                    : 'bg-light-surface text-light-muted hover:text-light-text border-light-border'
               )}
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+            >
+              {category}
+            </button>
+          ))}
         </motion.div>
 
         {/* Projects Grid - Bento Style */}
@@ -130,15 +75,11 @@ const ProjectsSection = () => {
               )}
             >
               <p className={cn('text-base font-semibold mb-2', isDark ? 'text-dark-text' : 'text-light-text')}>
-                No projects matching "{searchQuery || activeCategory}"
+                No projects matching "{activeCategory}"
               </p>
-              <p className="text-xs text-muted-foreground mb-4">Try checking your spelling or clearing filters.</p>
               <button
                 type="button"
-                onClick={() => {
-                  setActiveCategory('All');
-                  setSearchQuery('');
-                }}
+                onClick={() => setActiveCategory('All')}
                 className="px-5 py-2 rounded-full text-xs bg-primary text-white hover:bg-primary/90 transition-colors"
               >
                 Reset Filters
@@ -146,7 +87,7 @@ const ProjectsSection = () => {
             </motion.div>
           ) : (
             <motion.div
-              key={`${activeCategory}-${searchQuery}`}
+              key={activeCategory}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

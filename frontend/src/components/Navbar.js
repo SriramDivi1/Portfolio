@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Sun, Moon, Menu, X, Search } from 'lucide-react';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useScrollPosition } from '../hooks/useScroll';
 import { cn } from '../lib/cn';
@@ -13,7 +13,7 @@ const navLinks = [
   { name: 'Contact', href: '#contact' },
 ];
 
-const Navbar = ({ onOpenCommandPalette }) => {
+const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
   const { scrollPosition, scrollDirection } = useScrollPosition();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -79,26 +79,8 @@ const Navbar = ({ onOpenCommandPalette }) => {
               ))}
             </div>
 
-            {/* Search, Theme Toggle & Mobile Menu */}
+            {/* Theme Toggle & Mobile Menu */}
             <div className="flex items-center gap-3 md:gap-4">
-              <motion.button
-                type="button"
-                data-testid="command-palette-toggle"
-                onClick={onOpenCommandPalette}
-                aria-label="Open command palette"
-                className={cn(
-                  'hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono border transition-colors',
-                  isDark
-                    ? 'bg-dark-surface border-dark-border text-dark-muted hover:text-dark-text hover:border-primary/50'
-                    : 'bg-light-surface border-light-border text-light-muted hover:text-light-text hover:border-primary/50'
-                )}
-                whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
-              >
-                <Search size={14} className="text-primary" />
-                <span>Search</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-[10px]">⌘K</kbd>
-              </motion.button>
               <motion.button
                 type="button"
                 data-testid="theme-toggle"
@@ -168,26 +150,6 @@ const Navbar = ({ onOpenCommandPalette }) => {
             className={cn('fixed inset-0 z-40 pt-20', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
           >
             <div className="flex flex-col items-center gap-8 pt-12">
-              <motion.button
-                type="button"
-                data-testid="mobile-search-toggle"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenCommandPalette();
-                }}
-                className={cn(
-                  'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-mono border transition-colors',
-                  isDark
-                    ? 'bg-dark-surface border-dark-border text-dark-text'
-                    : 'bg-light-surface border-light-border text-light-text'
-                )}
-              >
-                <Search size={16} className="text-primary" />
-                <span>Search sections & projects</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-[10px]">⌘K</kbd>
-              </motion.button>
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.name}

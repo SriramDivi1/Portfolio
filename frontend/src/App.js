@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, Suspense, lazy } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import Lenis from 'lenis';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -6,7 +6,6 @@ import Navbar from './components/Navbar';
 import HeroSection from './components/sections/HeroSection';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
-import { CommandPalette } from './components/ui/CommandPalette';
 import { cn } from './lib/cn';
 import './App.css';
 
@@ -20,7 +19,6 @@ const AppContent = () => {
   const { isDark } = useTheme();
   const shouldReduceMotion = useReducedMotion();
   const lenisRef = useRef(null);
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   useEffect(() => {
     if (shouldReduceMotion) {
@@ -83,10 +81,7 @@ const AppContent = () => {
       <div className="noise-overlay" aria-hidden="true" />
       
       {/* Navigation */}
-      <Navbar onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} />
-      
-      {/* Command Palette Modal */}
-      <CommandPalette isOpen={isCommandPaletteOpen} onClose={() => setIsCommandPaletteOpen(false)} />
+      <Navbar />
       
       {/* Main Content */}
       <main id="main">
