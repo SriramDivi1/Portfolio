@@ -22,7 +22,7 @@ const AboutSection = () => {
     <section
       id="about"
       data-testid="about-section"
-      className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
+      className={cn('py-24 md:py-32 scroll-mt-20', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
         <SectionHeader

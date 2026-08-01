@@ -29,6 +29,7 @@ const AppContent = () => {
     }
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true, lerp: 0.08 });
     lenisRef.current = lenis;
+    window.lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -57,6 +58,7 @@ const AppContent = () => {
       document.removeEventListener('click', handleAnchorClick);
       lenis.destroy();
       lenisRef.current = null;
+      delete window.lenis;
     };
   }, [shouldReduceMotion]);
 

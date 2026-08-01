@@ -89,7 +89,7 @@ const ContactSection = () => {
     <section
       id="contact"
       data-testid="contact-section"
-      className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
+      className={cn('py-24 md:py-32 scroll-mt-20', isDark ? 'bg-dark-bg' : 'bg-light-surface')}
     >
       <Toaster
         position="top-center"

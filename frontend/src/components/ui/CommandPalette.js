@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Search, User, FolderGit2, Cpu, Briefcase, Mail, Download, Copy, Moon, Github, ArrowRight, X } from 'lucide-react';
+import { Search, User, FolderGit2, Cpu, Briefcase, Mail, Download, Copy, Moon, Github, ArrowRight, X, Code } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { toast } from 'sonner';
 import { cn } from '../../lib/cn';
+import { projects } from '../../data/projects';
 
 const resumeUrl = 'https://drive.google.com/file/d/1wjSlvJXTGWO67cNrRhENUyV2OQscH0PW/view?usp=sharing';
 
-const commandGroups = [
-  {
-    heading: 'Navigation',
-    items: [
-      { id: 'nav-about', label: 'Go to About', href: '#about', icon: User },
-      { id: 'nav-projects', label: 'Go to Projects', href: '#projects', icon: FolderGit2 },
-      { id: 'nav-skills', label: 'Go to Skills', href: '#skills', icon: Cpu },
-      { id: 'nav-experience', label: 'Go to Experience', href: '#experience', icon: Briefcase },
-      { id: 'nav-contact', label: 'Go to Contact', href: '#contact', icon: Mail },
-    ],
-  },
-  {
-    heading: 'Actions',
-    items: [
-      { id: 'action-resume', label: 'Download Resume', action: 'resume', icon: Download },
-      { id: 'action-copy-email', label: 'Copy Email Address', action: 'copy-email', icon: Copy },
-      { id: 'action-theme', label: 'Toggle Dark / Light Theme', action: 'theme', icon: Moon },
-      { id: 'action-github', label: 'Open GitHub Profile', action: 'github', icon: Github },
-    ],
-  },
+const navigationItems = [
+  { id: 'nav-about', label: 'Go to About', href: '#about', icon: User },
+  { id: 'nav-projects', label: 'Go to Projects', href: '#projects', icon: FolderGit2 },
+  { id: 'nav-skills', label: 'Go to Skills', href: '#skills', icon: Cpu },
+  { id: 'nav-experience', label: 'Go to Experience', href: '#experience', icon: Briefcase },
+  { id: 'nav-contact', label: 'Go to Contact', href: '#contact', icon: Mail },
+];
+
+const actionItems = [
+  { id: 'action-resume', label: 'Download Resume', action: 'resume', icon: Download },
+  { id: 'action-copy-email', label: 'Copy Email Address', action: 'copy-email', icon: Copy },
+  { id: 'action-theme', label: 'Toggle Dark / Light Theme', action: 'theme', icon: Moon },
+  { id: 'action-github', label: 'Open GitHub Profile', action: 'github', icon: Github },
 ];
 
 export function CommandPalette({ isOpen, onClose }) {
@@ -34,6 +28,7 @@ export function CommandPalette({ isOpen, onClose }) {
   const shouldReduceMotion = useReducedMotion();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const activeItemRef = useRef(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -56,25 +51,107 @@ export function CommandPalette({ isOpen, onClose }) {
     }
   }, [isOpen]);
 
-  const filteredGroups = commandGroups
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((item) =>
-        item.label.toLowerCase().includes(query.toLowerCase())
-      ),
-    }))
-    .filter((group) => group.items.length > 0);
+  // Auto-scroll selected item into view inside modal container
+  useEffect(() => {
+    if (activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [selectedIndex]);
 
-  const allItems = filteredGroups.flatMap((group) => group.items);
+  const filteredGroups = useMemo(() => {
+    const q = query.toLowerCase().trim();
+
+    const navMatches = navigationItems.filter(
+      (item) => !q || item.label.toLowerCase().includes(q)
+    );
+
+    const actionMatches = actionItems.filter(
+      (item) => !q || item.label.toLowerCase().includes(q)
+    );
+
+    // Projects search matching
+    const projectMatches = projects
+      .filter((project) => {
+        if (!q) return false;
+        return (
+          project.title.toLowerCase().includes(q) ||
+          project.description.toLowerCase().includes(q) ||
+          project.category?.toLowerCase().includes(q) ||
+          project.tech.some((t) => t.toLowerCase().includes(q)) ||
+          project.highlights?.some((h) => h.toLowerCase().includes(q))
+        );
+      })
+      .map((project) => ({
+        id: `project-${project.id}`,
+        label: project.title,
+        subtitle: project.tech.join(', '),
+        type: 'project',
+        projectTitle: project.title,
+        href: '#projects',
+        icon: FolderGit2,
+      }));
+
+    // Extract unique skills from projects
+    const allSkillsSet = new Set();
+    projects.forEach((p) => p.tech.forEach((t) => allSkillsSet.add(t)));
+    const skillMatches = Array.from(allSkillsSet)
+      .filter((skill) => q && skill.toLowerCase().includes(q))
+      .map((skill) => ({
+        id: `skill-${skill}`,
+        label: `Skill: ${skill}`,
+        type: 'skill',
+        skillName: skill,
+        href: '#skills',
+        icon: Code,
+      }));
+
+    const groups = [];
+
+    if (navMatches.length > 0) {
+      groups.push({ heading: 'Navigation', items: navMatches });
+    }
+    if (projectMatches.length > 0) {
+      groups.push({ heading: 'Projects', items: projectMatches });
+    }
+    if (skillMatches.length > 0) {
+      groups.push({ heading: 'Skills', items: skillMatches });
+    }
+    if (actionMatches.length > 0) {
+      groups.push({ heading: 'Actions', items: actionMatches });
+    }
+
+    return groups;
+  }, [query]);
+
+  const allItems = useMemo(() => filteredGroups.flatMap((group) => group.items), [filteredGroups]);
+
+  const scrollToTarget = (href) => {
+    const el = document.querySelector(href);
+    if (!el) return;
+
+    if (window.lenis) {
+      window.lenis.scrollTo(el, { offset: -85, duration: 1.2 });
+    } else {
+      const yOffset = -85;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+    window.history.pushState(null, '', href);
+  };
 
   const handleSelect = (item) => {
     onClose();
-    if (item.href) {
-      const el = document.querySelector(item.href);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        window.history.pushState(null, '', item.href);
-      }
+    if (item.type === 'project') {
+      window.dispatchEvent(new CustomEvent('select-portfolio-project', { detail: item.projectTitle }));
+      scrollToTarget('#projects');
+    } else if (item.type === 'skill') {
+      window.dispatchEvent(new CustomEvent('select-portfolio-project', { detail: item.skillName }));
+      scrollToTarget('#projects');
+    } else if (item.href) {
+      scrollToTarget(item.href);
     } else if (item.action === 'resume') {
       window.open(resumeUrl, '_blank', 'noopener,noreferrer');
       toast.success('Opening resume in new tab');
@@ -146,7 +223,7 @@ export function CommandPalette({ isOpen, onClose }) {
                   setQuery(e.target.value);
                   setSelectedIndex(0);
                 }}
-                placeholder="Type a command or search sections..."
+                placeholder="Search projects, skills, or sections..."
                 className="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground font-mono"
               />
               <button
@@ -163,7 +240,7 @@ export function CommandPalette({ isOpen, onClose }) {
             <div className="max-h-80 overflow-y-auto p-2">
               {filteredGroups.length === 0 ? (
                 <div className="py-8 text-center text-sm font-mono text-muted-foreground">
-                  No commands found matching "{query}"
+                  No results found matching "{query}"
                 </div>
               ) : (
                 filteredGroups.map((group) => (
@@ -178,6 +255,7 @@ export function CommandPalette({ isOpen, onClose }) {
                       return (
                         <button
                           key={item.id}
+                          ref={isSelected ? activeItemRef : null}
                           type="button"
                           onClick={() => handleSelect(item)}
                           onMouseEnter={() => setSelectedIndex(globalIndex)}
@@ -190,11 +268,18 @@ export function CommandPalette({ isOpen, onClose }) {
                               : 'hover:bg-light-bg text-light-text'
                           )}
                         >
-                          <div className="flex items-center gap-3">
-                            <Icon className={cn('w-4 h-4', isSelected ? 'text-white' : 'text-primary')} />
-                            <span>{item.label}</span>
+                          <div className="flex items-center gap-3 min-w-0 pr-2">
+                            <Icon className={cn('w-4 h-4 flex-shrink-0', isSelected ? 'text-white' : 'text-primary')} />
+                            <div className="truncate">
+                              <div className="truncate font-medium">{item.label}</div>
+                              {item.subtitle && (
+                                <div className={cn('text-xs truncate font-mono', isSelected ? 'text-white/80' : 'text-muted-foreground')}>
+                                  {item.subtitle}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          {isSelected && <ArrowRight className="w-4 h-4 text-white" />}
+                          {isSelected && <ArrowRight className="w-4 h-4 text-white flex-shrink-0" />}
                         </button>
                       );
                     })}

@@ -168,6 +168,26 @@ const Navbar = ({ onOpenCommandPalette }) => {
             className={cn('fixed inset-0 z-40 pt-20', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
           >
             <div className="flex flex-col items-center gap-8 pt-12">
+              <motion.button
+                type="button"
+                data-testid="mobile-search-toggle"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenCommandPalette();
+                }}
+                className={cn(
+                  'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-mono border transition-colors',
+                  isDark
+                    ? 'bg-dark-surface border-dark-border text-dark-text'
+                    : 'bg-light-surface border-light-border text-light-text'
+                )}
+              >
+                <Search size={16} className="text-primary" />
+                <span>Search sections & projects</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-[10px]">⌘K</kbd>
+              </motion.button>
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.name}

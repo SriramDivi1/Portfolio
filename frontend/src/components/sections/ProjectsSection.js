@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ExternalLink, Github, Folder, FileText, Search, X } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
@@ -16,15 +16,32 @@ const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const motionTransition = shouldReduceMotion ? { duration: 0 } : { delay: 0, duration: 0.3 };
 
+  useEffect(() => {
+    const handleSelectProject = (e) => {
+      if (e.detail) {
+        setSearchQuery(e.detail);
+        setActiveCategory('All');
+      }
+    };
+    window.addEventListener('select-portfolio-project', handleSelectProject);
+    return () => window.removeEventListener('select-portfolio-project', handleSelectProject);
+  }, []);
+
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
       const matchesCategory = activeCategory === 'All' || project.category === activeCategory;
       const queryLower = searchQuery.toLowerCase().trim();
+      if (!queryLower) return matchesCategory;
+
       const matchesSearch =
-        !queryLower ||
         project.title.toLowerCase().includes(queryLower) ||
         project.description.toLowerCase().includes(queryLower) ||
-        project.tech.some((t) => t.toLowerCase().includes(queryLower));
+        (project.longDescription && project.longDescription.toLowerCase().includes(queryLower)) ||
+        project.category?.toLowerCase().includes(queryLower) ||
+        project.role?.toLowerCase().includes(queryLower) ||
+        project.tech.some((t) => t.toLowerCase().includes(queryLower)) ||
+        (project.highlights && project.highlights.some((h) => h.toLowerCase().includes(queryLower))) ||
+        (project.features && project.features.some((f) => f.toLowerCase().includes(queryLower)));
 
       return matchesCategory && matchesSearch;
     });
@@ -34,7 +51,7 @@ const ProjectsSection = () => {
     <section
       id="projects"
       data-testid="projects-section"
-      className={cn('py-24 md:py-32', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
+      className={cn('py-24 md:py-32 scroll-mt-20', isDark ? 'bg-dark-bg' : 'bg-light-bg')}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
         <SectionHeader
